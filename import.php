@@ -62,18 +62,44 @@ echo "<br>\n<br><br><br><br>";
 if($row > 1){
 echo $data[1];
 
-$query = "INSERT INTO donors
-VALUES ('', '".addslashes($data[1])."', '".addslashes($data[2])."', '".addslashes($data[3])."',
-     '".addslashes($data[12])."',
-     '".addslashes($data[13])."',
-     '".addslashes($data[14])."',
-     '".addslashes($data[15])."');";
-$result = mysql_query($query);
+    $donor_query = "INSERT INTO donors
+    VALUES ('', '".addslashes($data[1])."', '".addslashes($data[2])."', '".addslashes($data[3])."',
+         '".addslashes($data[12])."',
+         '".addslashes($data[13])."',
+         '".addslashes($data[14])."',
+         '".addslashes($data[15])."');";
+    mysql_query($donor_query);
+    
+    //INSERT NEW RECORDS
+        
+    
+    $donor_id_inserted = mysql_insert_id();
+    echo $donor_id_inserted;
+
+    $donation_query = "INSERT INTO donations
+        VALUES ('', 
+        '".addslashes($data[0])."', 
+        '".addslashes($data[4])."', 
+        '".addslashes($data[5])."',
+        '".addslashes($data[6])."',
+        '".addslashes($data[7])."',
+        '".addslashes($data[8])."',
+        '".addslashes($data[9])."',
+        '".addslashes($data[10])."',
+        '".addslashes($data[11])."',
+        '".addslashes($data[16])."',
+        '".addslashes($data[17])."',
+        '".addslashes($donor_id_inserted)."');";
+
+$result = mysql_query($donation_query);
+
+if (!$result) {
+    $message  = 'Invalid query: ' . mysql_error() . "\n";
+    $message .= 'Whole query: ' . $donation_query;
+    die($message);
+}
 
 //INSERT NEW RECORDS
-    
-
-	$cid = mysql_insert_id();
 
 // //add extra fields
 // foreach ($cf as $key => $value) {
