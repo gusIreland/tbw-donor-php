@@ -1,4 +1,5 @@
 <?php require_once('includes/config.php'); 
+ini_set('auto_detect_line_endings',TRUE);
 ob_start();
 
 include('includes/sc-includes.php');
@@ -11,12 +12,14 @@ $handle = fopen ($_FILES['csv']['tmp_name'],"r");
 
 	$cf = array();
 
-while ($data = fgetcsv($handle, 0, ",")) {
+while ($data = fgetcsv($handle, 1000, ",")) {
 
     //custom field array
     if ($row == 1) {
     	foreach ($data as $key => $value) {
-    		if ($key > 18) {
+            echo $value;
+            echo "<br>";
+    		if ($key > 200) {
     			$cf[$key] = $value; 
     		}
     	}
@@ -54,23 +57,23 @@ while ($data = fgetcsv($handle, 0, ",")) {
     
 // else { 
 
-echo "JKLFDAJKLFADSJKLFDASJKLFDSJKLFDASJKLFDASJKLFDASJKLFDASJKLFDASJKLFDASJKLFDASJKLFDSAJKL";
+echo "<br>\n<br><br><br><br>";
+
+if($row > 1){
+echo $data[1];
+
+$query = "INSERT INTO donors
+VALUES ('', '".addslashes($data[1])."', '".addslashes($data[2])."', '".addslashes($data[3])."',
+     '".addslashes($data[12])."',
+     '".addslashes($data[13])."',
+     '".addslashes($data[14])."',
+     '".addslashes($data[15])."');";
+$result = mysql_query($query);
+
 //INSERT NEW RECORDS
-    mysql_query("INSERT INTO  donors ('id', 'preferred_mail_name', 'preffered_name_sort', 'preffered_address', 'preferred_city', 'preferred_state_code', 'preferred_country', 'email')
-    VALUES
-    (
-    	   '".addslashes($data[1])."',
-    	   '".addslashes($data[2])."',
-    	   '".addslashes($data[3])."',
-    	   '".addslashes($data[13])."',
-    	   '".addslashes($data[14])."',
-    	   '".addslashes($data[15])."',
-    	   '".addslashes($data[16])."'
-    )
-    ");
+    
 
 	$cid = mysql_insert_id();
-    echo $cid;
 
 // //add extra fields
 // foreach ($cf as $key => $value) {
@@ -101,12 +104,13 @@ echo "JKLFDAJKLFADSJKLFDASJKLFDSJKLFDASJKLFDASJKLFDASJKLFDASJKLFDASJKLFDASJKLFDA
 // ");
 
 //
+}
     $row++;
 }
 
 
 
-header('Location: contacts.php');
+// header('Location: contacts.php');
 }
 
 ?>
@@ -126,7 +130,6 @@ header('Location: contacts.php');
 
 <body>
 <?php include('includes/header.php'); ?>
-  
   <div class="container">
   <div class="leftcolumn">
     <h2> Import Contacts </h2>
