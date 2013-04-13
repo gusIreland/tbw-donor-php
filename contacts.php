@@ -6,10 +6,10 @@ $pagetitle = 'Contact';
 $sorder = '';
 $name = "name_up";
 if (isset($_GET['name_up'])) {
-$sorder = "ORDER BY contact_last ASC";
+$sorder = "ORDER BY preferred_mail_name ASC";
 $name = "name_down";
 } elseif (isset($_GET['name_down'])) {
-$sorder = "ORDER BY contact_last DESC";
+$sorder = "ORDER BY preferred_mail_name DESC";
 }
 
 $email = "email_up";
@@ -33,7 +33,7 @@ $sorder = "ORDER BY contact_phone DESC";
 $limit = "";
 $epp = 25;  //entries per page
 
-record_set('results',"SELECT contact_id FROM contacts");
+record_set('results',"SELECT id FROM donors");
 
 $entries_per_page = $epp;
 
@@ -49,7 +49,7 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
+record_set('contactlist',"SELECT * FROM donors $sorder $limit");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -102,9 +102,9 @@ No contacts have been added yet.
 
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
-          <td><?php echo $row_contactlist['contact_phone'] ? $row_contactlist['contact_phone'] : $na; ?></td>
-          <td><a href="mailto:<?php echo $row_contactlist['contact_email']; ?>"><?php echo $row_contactlist['contact_email']; ?></a></td>
+          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['preferred_mail_name']; ?></a></td>
+          <td><?php echo $row_contactlist['phone'] ? $row_contactlist['phone'] : $na; ?></td>
+          <td><a href="mailto:<?php echo $row_contactlist['email']; ?>"><?php echo $row_contactlist['email']; ?></a></td>
           <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
         </tr>
         <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
