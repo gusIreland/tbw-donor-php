@@ -1,7 +1,13 @@
 <?php
-record_set('history',"SELECT * FROM history INNER JOIN contacts ON history_contact = contact_id WHERE history_status = 1 ORDER BY history_date DESC LIMIT 0, 4");
+    record_set('history',"SELECT * FROM history INNER JOIN contacts ON history_contact = contact_id WHERE history_status = 1 ORDER BY history_date DESC LIMIT 0, 4");
 ?>
-<link href="simplecustomer.css" rel="stylesheet" type="text/css" />
+<script src='includes/jquery-1.9.0.min.js'></script>
+<script> 
+$(document).ready(function() {
+    console.log("YAY");
+});
+</script>
+<!-- <link href="simplecustomer.css" rel="stylesheet" type="text/css" /> -->
 <div class="headercontainer"> 
   <div class="header">
     <h1>Simple Customer</h1>
@@ -17,10 +23,10 @@ record_set('history',"SELECT * FROM history INNER JOIN contacts ON history_conta
 <?php if ($totalRows_history) { ?>
 <div class="historycontainer">Recent: 
     <?php $ih = 1; do { 
-//GET CONTACT INFO FROM HISTORY
-record_set('histcont',"SELECT * FROM contacts WHERE contact_id = ".$row_history['history_contact']."");
-//
-?>
+        //GET CONTACT INFO FROM HISTORY
+        record_set('histcont',"SELECT * FROM contacts WHERE contact_id = ".$row_history['history_contact']."");
+        //
+    ?>
     <a href="contact-details.php?id=<?php echo $row_histcont['contact_id']; ?>"><?php echo $row_histcont['contact_first']; ?> <?php echo $row_histcont['contact_last']; ?></a> <?php if ($totalRows_history!=$ih) {?> &middot; <?php } ?>
       <?php $ih++; } while ($row_history = mysql_fetch_assoc($history)); ?></div>
 <?php } ?>
