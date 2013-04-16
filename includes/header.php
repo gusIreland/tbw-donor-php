@@ -8,7 +8,7 @@ record_set('history',"SELECT * FROM history INNER JOIN contacts ON history_conta
 
   <a href="index.php" class="menubuttons <?php if ($pagetitle == 'Dashboard') { echo menubuttonsactive; } ?>">Dashboard</a>
 
-<a href="contacts.php" class="menubuttons <?php if ($pagetitle== 'Contact' || $pagetitle == 'ContactDetails') { echo 'menubuttonsactive'; } ?>">Contacts</a><a href="users.php" class="menubuttons <?php if ($pagetitle == 'Users') { echo 'menubuttonsactive'; } ?>">Users</a><span class="headerright">Logged in as <?php echo $row_userinfo['user_email']; ?> | <a href="logout.php">Log Out</a> | <a href="profile.php">Update Profile</a> </span><br clear="all" />
+<a href="contacts.php" class="menubuttons <?php if ($pagetitle== 'Contact' || $pagetitle == 'ContactDetails') { echo 'menubuttonsactive'; } ?>">Donors</a><a href="users.php" class="menubuttons <?php if ($pagetitle == 'Users') { echo 'menubuttonsactive'; } ?>">Users</a><span class="headerright">Logged in as <?php echo $row_userinfo['user_email']; ?> | <a href="logout.php">Log Out</a> | <a href="profile.php">Update Profile</a> </span><br clear="all" />
   </div>
   </div>
 
