@@ -1,6 +1,6 @@
 <?php require_once('includes/config.php');
 include('includes/sc-includes.php');
-$pagetitle = 'Contact';
+$pagetitle = 'Donor';
 
 //SORTING
 $sorder = '';
@@ -71,7 +71,7 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
   
   <div class="container">
   <div class="leftcolumn">
-    <h2>Contacts</h2>
+    <h2>Donors</h2>
 
 <?php if (!$totalRows_contactlist) { ?>
 <br />
