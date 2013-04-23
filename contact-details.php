@@ -12,6 +12,11 @@ $update = 1;
 //contact
 record_set('contact',"SELECT * FROM contacts WHERE contact_id = ".$_GET['id']."");
 
+//donations
+record_set('donations',"SELECT * FROM donations WHERE user_id = ".$_GET['id']." ORDER BY dt_date_record DESC");
+record_set('donation',"SELECT * FROM donations WHERE id = 57");
+
+
 //notes
 record_set('notes',"SELECT * FROM notes WHERE note_contact = ".$_GET['id']." ORDER BY note_date DESC");
 
@@ -101,14 +106,18 @@ do {
 
 <div style="display:block; margin-bottom:5px">
 <?php if ($row_contact['contact_image']) { ?><img src="images/<?php echo $row_contact['contact_image']; ?>" width="95" height="71" class="contactimage" /><?php } ?>
-<h2><?php echo $row_contact['contact_first']; ?> <?php echo $row_contact['contact_last']; ?><?php if ($row_contact['contact_company']) { ?><span style="color:#999999"> with <?php echo $row_contact['contact_company']; ?><?php } ?></span>
+<h2>
+	<?php echo $row_contact['contact_first']; ?> <?php echo $row_contact['contact_last']; ?><?php if ($row_contact['contact_company']) { ?><span style="color:#999999"> with <?php echo $row_contact['contact_company']; ?><?php } ?></span>
 <?php if ($can_edit) { ?><a style="font-size:12px; font-weight:normal" href="contact.php?id=<?php echo $row_contact['contact_id']; ?>">&nbsp;&nbsp;+ Edit contact </a><?php } ?>    </h2>
 <br clear="all" />
 </div>
 
-<p><br />
-    </p>
+<p>
+	<h3>Donations</h3>
+	<?php echo $row_donations['legal_amount']; ?>
 
+	<br />
+    </p>
 
 
 

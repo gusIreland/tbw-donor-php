@@ -17,8 +17,8 @@ while ($data = fgetcsv($handle, 1000, ",")) {
     //custom field array
     if ($row == 1) {
     	foreach ($data as $key => $value) {
-            echo $value;
-            echo "<br>";
+           // echo $value;
+           // echo "<br>";
     		if ($key > 200) {
     			$cf[$key] = $value; 
     		}
@@ -57,24 +57,60 @@ while ($data = fgetcsv($handle, 1000, ",")) {
     
 // else { 
 
-echo "<br>\n<br><br><br><br>";
+//echo "<br>\n<br><br><br><br>";
 
 if($row > 1){
-echo $data[1];
+//echo $data[1];
 
-    $donor_query = "INSERT INTO donors
-    VALUES ('', '".addslashes($data[1])."', '".addslashes($data[2])."', '".addslashes($data[3])."',
-         '".addslashes($data[12])."',
-         '".addslashes($data[13])."',
-         '".addslashes($data[14])."',
-         '".addslashes($data[15])."');";
-    mysql_query($donor_query);
-    
+//     $donor_query = "INSERT INTO contacts
+//     VALUES  (contact_first, contact_street, contact_city,
+//      contact_state, contact_country,
+//      contact_email) VALUES
+
+// (
+//        '".addslashes($data[1])."',
+//        '".addslashes($data[3])."',
+//        '".addslashes($data[12])."',
+//        '".addslashes($data[13])."',
+//        '".addslashes($data[14])."',
+//        '".addslashes($data[15])."'
+// )
+
+// ";
+
+$donor_query = "INSERT INTO contacts (contact_first, contact_last, contact_title, contact_company, contact_street, contact_city, contact_state, contact_zip, contact_country, contact_email, contact_phone, contact_fax, contact_web, contact_profile) VALUES
+
+(
+       '".addslashes($data[1])."',
+       '".addslashes('')."',
+       '".addslashes('')."',
+       '".addslashes('')."',
+       '".addslashes($data[3])."',
+       '".addslashes($data[12])."',
+       '".addslashes($data[13])."',
+       '".addslashes('')."',
+       '".addslashes($data[14])."',
+       '".addslashes($data[15])."',
+       '".addslashes('')."',
+       '".addslashes('')."',
+       '".addslashes('')."',
+       '".addslashes('')."'
+)
+
+";
+
+
+    $result =  mysql_query($donor_query);
+    if(!$result){
+          $message  = 'Invalid query: ' . mysql_error() . "\n";
+    $message .= 'Whole query: ' . $donor_query;
+    die($message);
+    }
     //INSERT NEW RECORDS
         
     
     $donor_id_inserted = mysql_insert_id();
-    echo $donor_id_inserted;
+   // echo $donor_id_inserted;
 
     $donation_query = "INSERT INTO donations
         VALUES ('', 
