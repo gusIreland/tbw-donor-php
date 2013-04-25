@@ -16,7 +16,7 @@ record_set('contact',"SELECT * FROM contacts WHERE contact_id = ".$_GET['id'].""
 $get_donation_for_donor = "SELECT * 
                            FROM contacts, donations
                            WHERE contacts.contact_id = donations.donor_id
-                           AND donor_id =6
+                           AND donor_id = " . $_GET['id'] . "
                            ORDER BY  donations.dt_date_record DESC 
                            LIMIT 0 , 30";
 
