@@ -49,7 +49,7 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
+record_set('contactlist',"SELECT * FROM donations $sorder $limit");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -96,15 +96,15 @@ No contacts have been added yet.
         <tr>
           <th width="26%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Name</a></th>
           <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $phone; ?>">Phone</a></th>
-          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Email</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Donation Amount</a></th>
           <th width="7%">&nbsp;</th>
         </tr>
 
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
+          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['alloc_short_name']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
           <td><?php echo $row_contactlist['contact_phone'] ? $row_contactlist['contact_phone'] : $na; ?></td>
-          <td><a href="mailto:<?php echo $row_contactlist['contact_email']; ?>"><?php echo $row_contactlist['contact_email']; ?></a></td>
+          <td><a href="mailto:<?php echo $row_contactlist['legal_amount']; ?>"><?php echo $row_contactlist['legal_amount']; ?></a></td>
           <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
         </tr>
         <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
