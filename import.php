@@ -87,9 +87,6 @@ $result_matching_emails = mysql_query($matching_emails);
 
 $row_in_email_check = mysql_fetch_row($result_matching_emails);
 
-// var_dump ($row_in_email_check);
-// echo $row_in_email_check[0];
-
 if($row_in_email_check){
   $donor_id = $row_in_email_check[0];
   echo $donor_id;
@@ -119,17 +116,34 @@ else {
         $message  = 'Invalid query: ' . mysql_error() . "\n";
   $message .= 'Whole query: ' . $donor_query;
   die($message);
-  }      
+  }
   
   $donor_id = mysql_insert_id();
   echo $donor_id;
 }
 
-$donation_query = "INSERT INTO donations
+$php_dt_date_record = strtotime($data[4]);
+$mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
+
+$php_date_added = strtotime($data[5]);
+$mysql_added = date('Y-m-d H:i:s', $php_date_added);
+
+$get_donation_for_donor = "SELECT * 
+                           FROM contacts, donations
+                           WHERE contacts.contact_id = donations.donor_id
+                           AND donations.donor_id = " . $donor_id . "
+                           AND donations.dt_date_record = '" . $mysql_dt_date_record . "'
+                           AND donations.legal_amount = " . $data[6] . "";
+
+$get_matching_donations = mysql_query($get_donation_for_donor);
+$row_for_matching_donation = mysql_fetch_row($get_matching_donations);
+
+if(!$row_for_matching_donation){
+  $donation_query = "INSERT INTO donations
                     VALUES ('', 
                     '".addslashes($data[0])."', 
-                    '".addslashes($data[4])."', 
-                    '".addslashes($data[5])."',
+                    '".$mysql_dt_date_record."', 
+                    '".$mysql_added."',
                     '".addslashes($data[6])."',
                     '".addslashes($data[7])."',
                     '".addslashes($data[8])."',
@@ -140,13 +154,17 @@ $donation_query = "INSERT INTO donations
                     '".addslashes($data[17])."',
                     '".addslashes($donor_id)."');";
 
-$result = mysql_query($donation_query);
-
-if (!$result) {
-    $message  = 'Invalid query: ' . mysql_error() . "\n";
-    $message .= 'Whole query: ' . $donation_query;
-    die($message);
+  $result = mysql_query($donation_query);
+  
+  if (!$result) {
+      $message  = 'Invalid query: ' . mysql_error() . "\n";
+      $message .= 'Whole query: ' . $donation_query;
+      die($message);
+  }
 }
+
+
+
 
 //INSERT NEW RECORDS
 

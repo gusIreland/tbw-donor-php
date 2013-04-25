@@ -49,8 +49,11 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-record_set('contactlist',"SELECT * FROM donations $sorder $limit");
-
+record_set('contactlist',"SELECT *, COUNT(*) AS 'count'
+                           FROM contacts, donations
+                           WHERE contacts.contact_id = donations.donor_id
+                           GROUP BY contacts.contact_first
+                           ORDER BY donations.dt_date_record DESC $limit");
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -95,16 +98,28 @@ No contacts have been added yet.
         </tr>
         <tr>
           <th width="26%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Name</a></th>
-          <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $phone; ?>">Phone</a></th>
-          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Donation Amount</a></th>
+          <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $phone; ?>">Number of Donations</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Most Recent Donation Amount</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Date of Most Recent Donation</a></th>
+
           <th width="7%">&nbsp;</th>
         </tr>
 
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['alloc_short_name']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
-          <td><?php echo $row_contactlist['contact_phone'] ? $row_contactlist['contact_phone'] : $na; ?></td>
-          <td><a href="mailto:<?php echo $row_contactlist['legal_amount']; ?>"><?php echo $row_contactlist['legal_amount']; ?></a></td>
+          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
+          <td><?php echo $row_contactlist['count'] ? $row_contactlist['count'] : $na; ?></td>
+          <?php
+                $query = "SELECT legal_amount, dt_date_record
+                           FROM contacts, donations
+                           WHERE contacts.contact_id = donations.donor_id
+                           AND contacts.contact_id = " . $row_contactlist['contact_id'] . "
+                           ORDER BY donations.dt_date_record DESC
+                           LIMIT 1";
+                $result = mysql_query($query);
+                $legal_amount_row = mysql_fetch_row($result);
+                echo ("<td>" . $legal_amount_row[0] . "</td><td>" . (strftime("%m/%d/%y", strtotime($legal_amount_row[1]))) ."</td>");
+                ?>
           <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
         </tr>
         <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
