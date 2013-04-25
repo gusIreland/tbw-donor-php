@@ -13,8 +13,15 @@ $update = 1;
 record_set('contact',"SELECT * FROM contacts WHERE contact_id = ".$_GET['id']."");
 
 //donations
-record_set('donations',"SELECT * FROM donations WHERE user_id = ".$_GET['id']." ORDER BY dt_date_record DESC");
-record_set('donation',"SELECT * FROM donations WHERE id = 57");
+$get_donation_for_donor = "SELECT * 
+                           FROM contacts, donations
+                           WHERE contacts.contact_id = donations.donor_id
+                           AND donor_id =6
+                           ORDER BY  donations.dt_date_record DESC 
+                           LIMIT 0 , 30";
+
+
+// record_set('donation',"SELECT * FROM donations WHERE id = 57");
 
 
 //notes
@@ -114,8 +121,15 @@ do {
 
 <p>
 	<h3>Donations</h3>
-	<?php echo $row_donations['legal_amount']; ?>
-
+	<?php
+        $result_donations = mysql_query($get_donation_for_donor);
+    
+        while($row = mysql_fetch_array($result_donations))
+        {
+            echo $row['legal_amount'] . " " . (strftime("%m/%d/%Y", strtotime($row['dt_date_record'])));
+            echo "<br />";
+        }
+    ?>
 	<br />
     </p>
 
