@@ -120,15 +120,26 @@ do {
 
 <p>
 	<h3>Donations</h3>
+	<table>
+		<tr>
+		<th>Legal Amount</th>
+		<th>Date of Donation</th>
+	</tr>
 	<?php
         $result_donations = mysql_query($get_donation_for_donor);
-    
+    	
+    	if (!$result_donations) { // add this check.
+ 	   		die('Invalid query: ' . mysql_error());
+		}
+
         while($row = mysql_fetch_array($result_donations))
         {
-            echo $row['legal_amount'] . " " . (strftime("%m/%d/%Y", strtotime($row['dt_date_record'])));
-            echo "<br />";
+        	echo "<tr>";
+            echo "<td>" . $row['legal_amount'] . "</td> <td> " . (strftime("%m/%d/%Y", strtotime($row['dt_date_record']))) . "</td>";
+            echo "</tr >";
         }
     ?>
+</table>
 	<br />
     </p>
 

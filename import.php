@@ -136,6 +136,7 @@ $get_donation_for_donor = "SELECT *
                            AND donations.legal_amount = " . $data[6] . "";
 
 $get_matching_donations = mysql_query($get_donation_for_donor);
+//Warning: mysql_fetch_row() expects parameter 1 to be resource, boolean given in /opt/lampp/htdocs/tbw-donor-php/import.php on line 139
 $row_for_matching_donation = mysql_fetch_row($get_matching_donations);
 
 if(!$row_for_matching_donation){
@@ -150,10 +151,11 @@ if(!$row_for_matching_donation){
                     '".addslashes($data[9])."',
                     '".addslashes($data[10])."',
                     '".addslashes($data[11])."',
-                    '".addslashes($data[16])."',
+                    '',
+                    '".addslashes($data[16])."', 
                     '".addslashes($data[17])."',
                     '".addslashes($donor_id)."');";
-
+//154
   $result = mysql_query($donation_query);
   
   if (!$result) {
