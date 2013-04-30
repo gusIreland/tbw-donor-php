@@ -10,7 +10,7 @@ $(document).ready(function() {
 <!-- <link href="simplecustomer.css" rel="stylesheet" type="text/css" /> -->
 <div class="headercontainer"> 
   <div class="header">
-    <h1>Simple Customer</h1>
+    <h1>TBW Donation Management</h1>
 
   <a href="index.php" class="menubuttons <?php if ($pagetitle == 'Dashboard') { echo menubuttonsactive; } ?>">Dashboard</a>
 
