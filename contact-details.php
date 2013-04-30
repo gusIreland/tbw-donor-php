@@ -13,8 +13,14 @@ $update = 1;
 record_set('contact',"SELECT * FROM contacts WHERE contact_id = ".$_GET['id']."");
 
 //donations
-record_set('donations',"SELECT * FROM donations WHERE user_id = ".$_GET['id']." ORDER BY dt_date_record DESC");
-record_set('donation',"SELECT * FROM donations WHERE id = 57");
+$get_donation_for_donor = "SELECT * 
+                           FROM contacts, donations
+                           WHERE contacts.contact_id = donations.donor_id
+                           AND donor_id = " . $_GET['id'] . "
+                           ORDER BY donations.dt_date_record DESC";
+
+
+// record_set('donation',"SELECT * FROM donations WHERE id = 57");
 
 
 //notes
@@ -114,8 +120,26 @@ do {
 
 <p>
 	<h3>Donations</h3>
-	<?php echo $row_donations['legal_amount']; ?>
+	<table>
+		<tr>
+		<th>Legal Amount</th>
+		<th>Date of Donation</th>
+	</tr>
+	<?php
+        $result_donations = mysql_query($get_donation_for_donor);
+    	
+    	if (!$result_donations) { // add this check.
+ 	   		die('Invalid query: ' . mysql_error());
+		}
 
+        while($row = mysql_fetch_array($result_donations))
+        {
+        	echo "<tr>";
+            echo "<td>" . $row['legal_amount'] . "</td> <td> " . (strftime("%m/%d/%Y", strtotime($row['dt_date_record']))) . "</td>";
+            echo "</tr >";
+        }
+    ?>
+</table>
 	<br />
     </p>
 

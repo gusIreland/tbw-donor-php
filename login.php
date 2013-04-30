@@ -40,7 +40,7 @@ redirect('Incorrect Username or Password',"login.php");
 
 <body>
 <div class="logincontainer">
-  <h1>Simple Customer </h1>
+  <h1>TBW Donor Management </h1>
   <form id="form1" name="form1" method="post" action="">
 
     <?php display_msg(); ?>

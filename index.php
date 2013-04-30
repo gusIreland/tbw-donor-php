@@ -46,7 +46,7 @@ Search results for <em><?php echo $_GET['s']; ?></em>.<br />
 <?php } ?>
 
 <?php if ($totalRows_contactlist > 0) { ?>
-    <h2>Contacts</h2>
+    <h2>Donors</h2>
 <br />
     <?php $i = 1; do { 
 $comma = "";

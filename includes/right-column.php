@@ -41,7 +41,7 @@ $i++;
   </form>
 <?php } ?>
   <p><br />
-    <a class="addcontact" href="contact.php" <?php if ($pagetitle == 'ContactDetails') { ?>style="border-bottom:0px"<?php } ?>>Add Contact</a>  
+    <a class="addcontact" href="contact.php" <?php if ($pagetitle == 'ContactDetails') { ?>style="border-bottom:0px"<?php } ?>>Add Donor</a>  
 
 <?php if ($user_admin && $pagetitle != 'ContactDetails') { ?>
 <a class="addcontact" href="import.php">Import/Export </a>
