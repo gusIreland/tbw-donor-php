@@ -12,21 +12,30 @@ $name = "name_down";
 $sorder = "ORDER BY contact_last DESC";
 }
 
-$email = "email_up";
-if (isset($_GET['email_up'])) {
-$sorder = "ORDER BY contact_email ASC";
-$email = "email_down";
+$number = "number_up";
+if (isset($_GET['number_up'])) {
+$sorder = "ORDER BY count ASC";
+$number = "number_down";
 } elseif (isset($_GET['email_down'])) {
-$sorder = "ORDER BY contact_email DESC";
+$sorder = "ORDER BY count DESC";
 }
 
-$phone = "phone_up";
-if (isset($_GET['phone_up'])) {
+$amount = "amount_up";
+if (isset($_GET['amount_up'])) {
 $sorder = "ORDER BY contact_phone ASC";
-$phone = "phone_down";
+$amount = "amount_down";
 } elseif (isset($_GET['email_phone'])) {
 $sorder = "ORDER BY contact_phone DESC";
 }
+
+$date = "date_up";
+if (isset($_GET['date_up'])) {
+$sorder = "ORDER BY contact_phone ASC";
+$date = "date_down";
+} elseif (isset($_GET['email_phone'])) {
+$sorder = "ORDER BY contact_phone DESC";
+}
+
 //END SORTING
 
 //PAGINATION
@@ -98,9 +107,9 @@ No contacts have been added yet.
         </tr>
         <tr>
           <th width="26%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Name</a></th>
-          <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $phone; ?>">Number of Donations</a></th>
-          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Most Recent Donation Amount</a></th>
-          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Date of Most Recent Donation</a></th>
+          <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $number; ?>">Number of Donations</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>">Most Recent Donation Amount</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>">Date of Most Recent Donation</a></th>
 
           <th width="7%">&nbsp;</th>
         </tr>
