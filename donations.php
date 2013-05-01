@@ -76,8 +76,10 @@ $limit = "LIMIT $offset, $entries_per_page";
 
 //get contacts
 if($search == 1){
-  record_set('contactlist',"SELECT * FROM donations where date_added between $startDate and $endDate $sorder $limit");
-
+  //record_set('contactlist',"SELECT * FROM donations where date_added between $startDate and $endDate $sorder $limit");
+  $endDateString = "\"".$endDate ."\"";
+  $startDateString = "\"".$startDate ."\"";
+  record_set('contactlist',"SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit");
 }
 else
 record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
@@ -104,7 +106,6 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
   <div class="container">
     <div class="leftcolumn">
       <h2>Donations</h2>
-
       <form action="donations.php" method="post">
       <div style="float: left; padding-right: 3px; line-height: 18px;">from:</div>
         <?php
@@ -138,7 +139,7 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
         $myCalendar->setDatePair('dateStart', 'dateEnd', $dateStart_default);
         $myCalendar->writeScript();   
         ?>
-        <input type="submit" name="button" id="button" value="Submit" />
+        <input type="submit" name="button" id="button" value="Submit"/>
       </form>
 
 
