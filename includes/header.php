@@ -1,11 +1,13 @@
 <?php
     record_set('history',"SELECT * FROM history INNER JOIN contacts ON history_contact = contact_id WHERE history_status = 1 ORDER BY history_date DESC LIMIT 0, 4");
 ?>
+<script language="javascript" src="includes/calendar/calendar.js"></script>
 <script src='includes/jquery-1.9.0.min.js'></script>
 <script> 
 $(document).ready(function() {
     console.log("YAY");
 });
+
 </script>
 <!-- <link href="simplecustomer.css" rel="stylesheet" type="text/css" /> -->
 <div class="headercontainer"> 
