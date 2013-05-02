@@ -132,7 +132,7 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
 
 <?php if (!$totalRows_contactlist) { ?>
 <br />
-No contacts have been added yet.
+No donations have been added yet.
 <br />
 <br />
 <strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Contacts </strong><br />

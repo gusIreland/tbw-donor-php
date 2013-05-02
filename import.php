@@ -151,7 +151,6 @@ if(!$row_for_matching_donation){
                     '".addslashes($data[9])."',
                     '".addslashes($data[10])."',
                     '".addslashes($data[11])."',
-                    '',
                     '".addslashes($data[16])."', 
                     '".addslashes($data[17])."',
                     '".addslashes($donor_id)."');";
