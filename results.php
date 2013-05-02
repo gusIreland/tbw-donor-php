@@ -1,6 +1,6 @@
 <?php require_once('includes/config.php');
 include('includes/sc-includes.php');
-$pagetitle = 'Results';
+$pagetitle = 'Result';
 
 //SORTING
 $sorder = '';
@@ -107,41 +107,6 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
   <div class="container">
     <div class="leftcolumn">
       <h2>Donations</h2>
-      <form action="donations.php" method="post">
-      <div style="float: left; padding-right: 3px; line-height: 18px;">from:</div>
-        <?php
-//get class into the page
-        require_once('includes/calendar/classes/tc_calendar.php');
-//instantiate class and set properties
-        $date3_default = "2013-04-29";
-        $date4_default = "2013-05-05";
-
-        $myCalendar = new tc_calendar("dateStart", true, false);
-        $myCalendar->setIcon("includes/calendar/images/iconCalendar.gif");
-        $myCalendar->setDate(date('d', strtotime($date3_default))
-          , date('m', strtotime($date3_default))
-          , date('Y', strtotime($date3_default)));
-        $myCalendar->setPath("includes/calendar/");
-        $myCalendar->setYearInterval(1970, 2020);
-        $myCalendar->setAlignment('left', 'bottom');
-        $myCalendar->setDatePair('dateStart', 'dateEnd', $dateEnd_default);
-        $myCalendar->writeScript();   
-        ?>
-        <div style="float: left; padding-right: 3px; line-height: 18px;">to:</div>
-        <?php
-        $myCalendar = new tc_calendar("dateEnd", true, false);
-        $myCalendar->setIcon("includes/calendar/images/iconCalendar.gif");
-        $myCalendar->setDate(date('d', strtotime($date4_default))
-         , date('m', strtotime($date4_default))
-         , date('Y', strtotime($date4_default)));
-        $myCalendar->setPath("includes/calendar/");
-        $myCalendar->setYearInterval(1970, 2020);
-        $myCalendar->setAlignment('left', 'bottom');
-        $myCalendar->setDatePair('dateStart', 'dateEnd', $dateStart_default);
-        $myCalendar->writeScript();   
-        ?>
-        <input type="submit" name="button" id="button" value="Submit"/>
-      </form>
 
 
 <?php if (!$totalRows_contactlist) { ?>
@@ -184,9 +149,10 @@ No contacts have been added yet.
       <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
     </table>
   </form>
+  <?php echo $query ?>
   <form action="csvR.php" method="post">
     <input type="hidden" name="query"
-    value= <?php $query ?> >
+    value= <?php echo $query ?> >
     <input type="submit" name="button" id="button" value="Export Results"/>
   </form>
   <?php
