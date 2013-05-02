@@ -40,6 +40,7 @@ redirect('Incorrect Username or Password',"login.php");
 
 <body>
 <div class="logincontainer">
+  <img src="images/techbridge-imagesTrans.gif" width="250" />
   <h1>TBW Donor Management </h1>
   <form id="form1" name="form1" method="post" action="">
 
@@ -49,7 +50,7 @@ Email Address <br />
     <br />
     <br />
     Password<br />
-    <input type="password" name="password" class="required" title="Please enter your password." />
+    <input type="password" name="password" size="35" class="required" title="Please enter your password." />
     <br />
     <br />
     <input type="submit" name="Submit" value="Login" />

@@ -432,13 +432,13 @@ function showState(d) {
                     </tr>
                 </table></td>
               </tr>
-              <tr>
+              <!-- <tr>
                 <td>Image<br />
                     <input name="image" type="file" id="image" /><?php if ($row_contact['contact_image']) { ?>
                 <br />
                 <img src="images/<?php echo $row_contact['contact_image']; ?>" width="95" />
 <?php } ?></td>
-              </tr>
+              </tr> -->
               <tr>
                 <td>Website<br />
                     <input name="contact_web" type="text" id="contact_web" value="<?php echo $row_contact['contact_web']; ?>" size="45" /></td>

@@ -37,10 +37,11 @@ h1, h2, h3, h4, h5, p {
 	margin-right: auto;
 	border: 0px solid #CCCCCC;
 	margin-top: 25px;
-	background-color: #A8DF7E;
+	background-color: #FFFFFF;
+    /*background-color: #A8DF7E;*/
 }
 .logincontainer h1 {
-	color: #FFFFFF;
+	color: #000000;
 }
 
 .container {
@@ -100,13 +101,19 @@ h2 {
 .header {
 	display: block;
 	width: 800px;
-	padding: 5px;
+	padding: 6px;
 	margin-left: auto;
 	margin-right: auto;
 	padding-bottom: 0px;
 }
 .header h1 {
 	color: #333333;
+}
+.tbwicon {
+	display: block;
+	float: left;
+	padding: 0px;
+	margin-left: 0px;
 }
 .menubuttons {
 	display: block;
