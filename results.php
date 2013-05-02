@@ -1,6 +1,6 @@
 <?php require_once('includes/config.php');
 include('includes/sc-includes.php');
-$pagetitle = 'Donation';
+$pagetitle = 'Results';
 
 //SORTING
 $sorder = '';
@@ -39,6 +39,13 @@ if (isset($_GET['date_up'])) {
 //END SORTING
 
 //datePicker
+$search = 0;
+if(isset($_REQUEST["dateStart"])){
+
+  $search = 1;
+  $startDate = isset($_REQUEST["dateStart"]) ? $_REQUEST["dateStart"] : "";
+  $endDate = isset($_REQUEST["dateEnd"]) ? $_REQUEST["dateEnd"] : "";
+}
 
 
 
@@ -68,7 +75,14 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-
+if($search == 1){
+  //record_set('contactlist',"SELECT * FROM donations where date_added between $startDate and $endDate $sorder $limit");
+  $endDateString = "\"".$endDate ."\"";
+  $startDateString = "\"".$startDate ."\"";
+  $query = "SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit";
+  record_set('contactlist',"SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit");
+}
+else
 record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
  
  ?>
@@ -93,7 +107,7 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
   <div class="container">
     <div class="leftcolumn">
       <h2>Donations</h2>
-      <form action="results.php" method="post">
+      <form action="donations.php" method="post">
       <div style="float: left; padding-right: 3px; line-height: 18px;">from:</div>
         <?php
 //get class into the page
@@ -170,7 +184,11 @@ No contacts have been added yet.
       <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
     </table>
   </form>
-
+  <form action="csvR.php" method="post">
+    <input type="hidden" name="query"
+    value= <?php $query ?> >
+    <input type="submit" name="button" id="button" value="Export Results"/>
+  </form>
   <?php
   include('includes/pagination_contacts.php');
   ?>
