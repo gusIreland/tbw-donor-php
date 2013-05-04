@@ -80,11 +80,17 @@ if($search == 1){
   $endDateString = "\"".$endDate ."\"";
   $startDateString = "\"".$startDate ."\"";
   $query = "SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit";
-  record_set('contactlist',"SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit");
+  record_set('contact_list',"SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit");
 }
 else
-record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
+record_set('contact_list',"SELECT * FROM donations $sorder $limit ");
  
+ function hello(){
+  global $query, $startDateString, $endDateString, $sorder, $limit;
+  $stripped_query = str_replace('"', "'", $query);
+  $result = record_set('csv',$stripped_query); 
+
+}
  ?>
  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
  <html xmlns="http://www.w3.org/1999/xhtml">
@@ -103,13 +109,12 @@ record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
 <body>
   <?php include('includes/header.php');
   ?>
-  
   <div class="container">
     <div class="leftcolumn">
       <h2>Donations</h2>
 
 
-<?php if (!$totalRows_contactlist) { ?>
+<?php if (!$totalRows_contact_list) { ?>
 <br />
 No contacts have been added yet.
 <br />
@@ -118,7 +123,7 @@ No contacts have been added yet.
 <br />
 <?php } ?>
 
-<?php if ($totalRows_contactlist) { ?>
+<?php if ($totalRows_contact_list) { ?>
 <form id="form1" name="form1" method="post" action="">
   <table width="100%" border="0" cellspacing="0" cellpadding="0">
     <tr>
@@ -140,19 +145,23 @@ No contacts have been added yet.
 
       <?php $row_count = 1; do {  ?>
       <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-        <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['donor_id']; ?>"><?php echo $row_contactlist['donor_id']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
-        <td><?php echo $row_contactlist['receipt_number'] ? $row_contactlist['receipt_number'] : $na; ?></td>
-       <td><?php echo $row_contactlist['legal_amount'];?></td>
-       <td><?php echo $row_contactlist['date_added']; ?></td>
-        <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+        <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>"><?php echo $row_contact_list['donor_id']; ?> <?php echo $row_contact_list['contact_last']; ?></a></td>
+        <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['receipt_number'] : $na; ?></td>
+       <td><?php echo $row_contact_list['legal_amount'];?></td>
+       <td><?php echo $row_contact_list['date_added']; ?></td>
+        <td><a href="delete.php?contact=<?php echo $row_contact_list['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
       </tr>
-      <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
+      <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
     </table>
   </form>
   <?php echo $query ?>
   <form action="csvR.php" method="post">
-    <input type="hidden" name="query"
-    value= <?php echo $query ?> >
+    <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
+    <input type="hidden" name="start_date" value='<?php echo $startDateString ?>'>
+    <input type="hidden" name="end_date" value='<?php echo $endDateString ?>'>
+    <input type="hidden" name="offset" value='<?php echo $offset ?>'>
+    <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
+    <input type="hidden" name="order" value='<?php echo $sorder ?>'>
     <input type="submit" name="button" id="button" value="Export Results"/>
   </form>
   <?php

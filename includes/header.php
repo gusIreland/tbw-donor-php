@@ -3,12 +3,6 @@
 ?>
 <script language="javascript" src="includes/calendar/calendar.js"></script>
 <script src='includes/jquery-1.9.0.min.js'></script>
-<script> 
-$(document).ready(function() {
-    console.log("YAY");
-});
-
-</script>
 <!-- <link href="simplecustomer.css" rel="stylesheet" type="text/css" /> -->
 <div class="headercontainer"> 
   <img src="images/techbridge-imagestrans.gif" width="95" class="tbwicon"/>
