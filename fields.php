@@ -1,41 +1,42 @@
-<?php require_once('includes/config.php'); 
-include('includes/sc-includes.php');
-$pagetitle = 'Contact';
-
-//restrict if not admin
-if (!$user_admin) {
-header('Location: contacts.php'); die;
-}
-//
-
-//custom fields
-record_set('fields',"SELECT * FROM fields ORDER BY field_title ASC");
-//
-
-if ($_POST) {
-
-foreach ($_POST['field'] as $key => $value) {
-if ($value) {
-$value = addslashes($value);
-mysql_query("UPDATE fields SET 
-	field_title = '".$value."',
-	field_content = '".addslashes($_POST['field_content_update'][$key])."'
-WHERE field_id = ".$key."");
-}
-}
-
-//add new field
-if ($_POST['field_add']) {
-mysql_query("INSERT INTO fields (field_title, field_content) VALUES 
-	(
-		'".insert('field_add')."',
-		'".insert('field_content')."'
-	)
-");
-}
-
-redirect('Your changes have been saved.','fields.php');
-}
+<?php 
+    require_once('includes/config.php'); 
+    include('includes/sc-includes.php');
+    $pagetitle = 'Contact';
+    
+    //restrict if not admin
+    if (!$user_admin) {
+      header('Location: contacts.php'); die;
+    }
+    //
+    
+    //custom fields
+    record_set('fields',"SELECT * FROM fields ORDER BY field_title ASC");
+    //
+      
+    if ($_POST) {
+        if($_POST['field']){
+            foreach ($_POST['field'] as $key => $value) {
+                if ($value) {
+                $value = addslashes($value);
+                mysql_query("UPDATE fields SET 
+      	                 field_title = '".$value."',
+      	                 field_content = '".addslashes($_POST['field_content_update'][$key])."'
+                            WHERE field_id = ".$key."");
+                }
+            }
+        }
+    
+        //add new field
+        if ($_POST['field_add']) {
+            mysql_query("INSERT INTO fields (field_title, field_content) VALUES 
+          	    (
+          		'".insert('field_add')."',
+          		'".insert('field_content')."'
+          	    )
+            ");
+        }
+        redirect('Your changes have been saved.','fields.php');
+    }
 
 ?>
 
