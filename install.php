@@ -58,6 +58,23 @@ mysql_query("CREATE TABLE `contacts` (
   PRIMARY KEY  (`contact_id`)
 ) TYPE=MyISAM");
 
+mysql_query("CREATE TABLE IF NOT EXISTS `donations` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `cmu_transaction_id` varchar(255) NOT NULL,
+  `dt_date_record` date NOT NULL,
+  `date_added` date NOT NULL,
+  `legal_amount` float NOT NULL,
+  `credit_amount` float NOT NULL,
+  `transaction_type_description` varchar(255) NOT NULL,
+  `alloc_short_name` varchar(255) NOT NULL,
+  `prsp_manager` varchar(255) NOT NULL,
+  `receipt_number` varchar(255) NOT NULL,
+  `prim_comment` text NOT NULL,
+  `match_company_name` varchar(255) NOT NULL,
+  `donor_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM");
+
 mysql_query("CREATE TABLE `fields` (
   `field_id` int(11) NOT NULL auto_increment,
   `field_type` int(11) default NULL,
@@ -78,13 +95,13 @@ mysql_query("CREATE TABLE `users` (
   `user_id` int(11) NOT NULL auto_increment,
   `user_level` int(11) default NULL,
   `user_email` varchar(255) default NULL,
-  `user_password` varchar(255) default NULL,
+  `user_password` varchar(512) default NULL,
   `user_date` int(10) default NULL,
   `user_home` varchar(255) default NULL,
   PRIMARY KEY  (`user_id`)
 ) TYPE=MyISAM");
 
-$password = trim($_POST['password']);
+$password = trim(addslashes($_POST['password']));
 $password_hashed = hash("sha256", $password);
 
 mysql_query("INSERT INTO `users` (`user_id`, `user_level`, `user_email`, `user_password`, `user_date`, `user_home`) VALUES (1, 1, '".trim($_POST['email'])."', '".$password_hashed."', NULL, 'index.php')");
