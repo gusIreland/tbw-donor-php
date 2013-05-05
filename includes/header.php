@@ -7,7 +7,7 @@
 <div class="headercontainer"> 
   <img src="images/techbridge-imagestrans.gif" width="95" class="tbwicon"/>
   <div class="header">
-    <h1>TBW Donor Management</h1>
+    <h1>TBW Donation Management</h1>
 
   <a href="index.php" class="menubuttons <?php if ($pagetitle == 'Dashboard') { echo menubuttonsactive; } ?>">Dashboard</a>
 

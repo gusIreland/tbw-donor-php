@@ -68,7 +68,6 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-
 record_set('contactlist',"SELECT * FROM donations $sorder $limit ");
  
  ?>
