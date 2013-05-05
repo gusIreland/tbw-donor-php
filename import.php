@@ -5,6 +5,15 @@
     
     include('includes/sc-includes.php');
     $pagetitle = 'Import Spreadsheet';
+
+    function dataEmpty($dataRow){
+        $data_empty = true;
+        foreach($dataRow as $data_value) {
+            if($data_value != '')
+                $data_empty = false;
+        }
+        return $data_empty;
+    }
     
     if (!empty($_GET['csv']) && $_GET['csv'] == 'import' && $_FILES['csv']['tmp_name']) { 
         $row = 1;
@@ -26,7 +35,7 @@
             
             //end add extra fields
         
-            if($row > 1){
+            if($row > 1 && !dataEmpty($data)){
         
                 // check if we already have a donor by this name / email
             
@@ -75,6 +84,11 @@
         
                 $php_dt_date_record = strtotime($data[4]);
                 $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
+                echo "<br>";
+                echo $php_dt_date_record;
+                echo "<br>";
+                echo $mysql_dt_date_record;
+                echo "<br>";
                 
                 $php_date_added = strtotime($data[5]);
                 $mysql_added = date('Y-m-d H:i:s', $php_date_added);
