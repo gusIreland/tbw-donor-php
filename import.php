@@ -48,7 +48,7 @@
             
                 if($row_in_email_check){
                     $donor_id = $row_in_email_check[0];
-                    echo $donor_id;
+                    // echo $donor_id;
                 }
     
                 else {
@@ -79,16 +79,16 @@
                     }
                 
                     $donor_id = mysql_insert_id();
-                    echo $donor_id;
+                    // echo $donor_id;
                 }
         
                 $php_dt_date_record = strtotime($data[4]);
                 $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
-                echo "<br>";
-                echo $php_dt_date_record;
-                echo "<br>";
-                echo $mysql_dt_date_record;
-                echo "<br>";
+                // echo "<br>";
+                // echo $php_dt_date_record;
+                // echo "<br>";
+                // echo $mysql_dt_date_record;
+                // echo "<br>";
                 
                 $php_date_added = strtotime($data[5]);
                 $mysql_added = date('Y-m-d H:i:s', $php_date_added);
@@ -130,7 +130,7 @@
             }
             $row++;
         }
-    // header('Location: contacts.php');
+    header('Location: contacts.php?import=success');
     }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

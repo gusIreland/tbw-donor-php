@@ -71,6 +71,9 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
   
   <div class="container">
   <div class="leftcolumn">
+    <?php if($_GET['import'] == 'success')
+      echo "CSV import successful!<br><br>";
+    ?>
     <h2>Donors</h2>
 
 <?php if (!$totalRows_contactlist) { ?>
