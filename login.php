@@ -1,29 +1,29 @@
-<?php require_once('includes/config.php'); 
-include('includes/functions.php');
-session_start();
-if (isset($_SESSION['user'])) {
-header('Location: index.php');
-}
-mysql_select_db($database_contacts, $contacts);
-$pagetitle = Login;
-
-
-if ($_POST['email']  && $_POST['password']) {
-record_set('logincheck',"SELECT * FROM users WHERE user_email = '".addslashes($_POST['email'])."' AND user_password = '".addslashes($_POST['password'])."'");
-
-if ($totalRows_logincheck==1) { 
-	$_SESSION['user'] = addslashes($_POST['email']);
-	$redirect = 'index.php';
-	header(sprintf('Location: %s', $redirect)); die;	
-}
-
-if ($totalRows_logincheck < 1) { 
-redirect('Incorrect Username or Password',"login.php");
-}
-
-}
-
-
+<?php 
+    require_once('includes/config.php'); 
+    include('includes/functions.php');
+    session_start();
+    if (isset($_SESSION['user'])) {
+        header('Location: index.php');
+    }
+    mysql_select_db($database_contacts, $contacts);
+    $pagetitle = Login;
+    
+    if ($_POST['email']  && $_POST['password']) {
+        $password = addslashes($_POST['password']);
+        $password_hashed = hash("sha256", $password);
+    
+        record_set('logincheck',"SELECT * FROM users WHERE user_email = '".addslashes($_POST['email'])."' AND user_password = '".$password_hashed."'");
+    
+        if ($totalRows_logincheck == 1) { 
+    	   $_SESSION['user'] = addslashes($_POST['email']);
+    	   $redirect = 'index.php';
+    	   header(sprintf('Location: %s', $redirect)); die;	
+        }
+    
+        if ($totalRows_logincheck < 1) { 
+            redirect('Incorrect Username or Password',"login.php");
+        }
+    }
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

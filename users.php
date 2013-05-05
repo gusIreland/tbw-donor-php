@@ -1,83 +1,82 @@
-<?php require_once('includes/config.php'); 
-include('includes/sc-includes.php');
-$pagetitle = 'Users';
-
-mysql_select_db($database_contacts, $contacts);
-
-//restrict access
-if (!$user_admin) {
-header('Location: contacts.php'); die;
-}
-//
-
-$update = isset($_GET['id']) ? 1 : 0;
-$add = isset($_GET['add']) ? 1 : 0;
-
-
-if (!$update && !$add) {
-record_set('users',"SELECT * FROM users ORDER BY user_email ASC");
-}
-
-
-if ($update) {
-record_set('userp',"SELECT * FROM users WHERE user_id = ".$_GET['id']."");
-}
-
-$password = $row_userp['user_password'];
-
-if ($_POST['password']) {
-$password = $_POST['password'];
-}
-
-//ADD user
-if ($add && $_POST['user_email']) {
-mysql_query("INSERT INTO users (user_level, user_email, user_password, user_home) VALUES
-
-(
-	'".$_POST['user_level']."',
-	'".trim($_POST['user_email'])."',
-	'".$password."',
-	'contacts.php'
-)
-
-");
-set_msg('User Added');
-header('Location: users.php'); die;
-}
-//
-
-//don't let an admin change their own status to anything but admin
-$ulevel = $_POST['user_level'];
-if ($user_admin == $_GET['id'] && $_POST['user_level'] != 1) {
-$ulevel = 1;
-}
-//
-
-//UPDATE user
-if ($_POST['user_email'] && $update) {
-
-	mysql_query("UPDATE users SET 
-		user_level = '".$ulevel."',
-		user_email = '".trim($_POST['user_email'])."', 
-		user_password = '".trim($password)."', 
-		user_home = 'contacts.php'
-	WHERE user_id = ".$_GET['id']."
-	");
-	
-	set_msg('User Updated');
-	if ($row_userp['user_id'] == $userid) {
-	$_SESSION['user'] = $_POST['email'];
-	}
-	
-	
-	header('Location: users.php'); die;
-}
-//
-
-$user_status[1] = 'Admin';
-$user_status[2] = 'Restricted';
-$user_status[3] = 'Read Only';
-
+<?php 
+    require_once('includes/config.php'); 
+    include('includes/sc-includes.php');
+    $pagetitle = 'Users';
+    
+    mysql_select_db($database_contacts, $contacts);
+    
+    //restrict access
+    if (!$user_admin) {
+        header('Location: contacts.php'); die;
+    }
+    //
+    
+    $update = isset($_GET['id']) ? 1 : 0;
+    $add = isset($_GET['add']) ? 1 : 0;
+    
+    
+    if (!$update && !$add) {
+        record_set('users',"SELECT * FROM users ORDER BY user_email ASC");
+    }
+    
+    
+    if ($update) {
+        record_set('userp',"SELECT * FROM users WHERE user_id = ".$_GET['id']."");
+    }
+    
+    $password = $row_userp['user_password'];
+    
+    if ($_POST['password']) {
+        $password = hash("sha256", (addslashes($_POST['password'])));
+    }
+    
+    
+    
+    //ADD user
+    if ($add && $_POST['user_email']) {
+        mysql_query("INSERT INTO users (user_level, user_email, user_password, user_home) VALUES
+    
+        ('".$_POST['user_level']."', 
+         '".trim($_POST['user_email'])."', 
+         '".$password."', 
+         'contacts.php')");
+        set_msg('User Added');
+        header('Location: users.php'); die;
+    }
+    //
+    
+    //don't let an admin change their own status to anything but admin
+    $ulevel = $_POST['user_level'];
+    if ($user_admin == $_GET['id'] && $_POST['user_level'] != 1) {
+        $ulevel = 1;
+    }
+    //
+    
+    //UPDATE user
+    if ($_POST['user_email'] && $update) {
+    
+    	mysql_query("UPDATE users SET 
+    		user_level = '".$ulevel."',
+    		user_email = '".trim($_POST['user_email'])."', 
+    		user_password = '".$password."', 
+    		user_home = 'contacts.php'
+    	WHERE user_id = ".$_GET['id']."
+    	");
+    	
+    	set_msg('User Updated');
+    	if ($row_userp['user_id'] == $userid) {
+    	   $_SESSION['user'] = $_POST['email'];
+    	}
+    	
+    	
+    	header('Location: users.php'); die;
+    }
+    //
+    
+    $user_status[1] = 'Admin';
+    $user_status[2] = 'Restricted';
+    $user_status[3] = 'Read Only';
+    
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">

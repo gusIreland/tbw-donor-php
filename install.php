@@ -1,14 +1,15 @@
-<?php require_once('includes/config.php'); 
-ob_start();
-session_start();
-$res = mysql_query("SHOW TABLE STATUS LIKE 'users'") or die(mysql_error());
-$table_exists = mysql_num_rows($res) == 1;
-$success = 0;
-$s = 0;
-if (isset($_GET['s'])) {
-$success = 1;
-$s = 1;
-}
+<?php 
+  require_once('includes/config.php'); 
+  ob_start();
+  session_start();
+  $res = mysql_query("SHOW TABLE STATUS LIKE 'users'") or die(mysql_error());
+  $table_exists = mysql_num_rows($res) == 1;
+  $success = 0;
+  $s = 0;
+  if (isset($_GET['s'])) {
+    $success = 1;
+    $s = 1;
+  }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -83,7 +84,10 @@ mysql_query("CREATE TABLE `users` (
   PRIMARY KEY  (`user_id`)
 ) TYPE=MyISAM");
 
-mysql_query("INSERT INTO `users` (`user_id`, `user_level`, `user_email`, `user_password`, `user_date`, `user_home`) VALUES (1, 1, '".trim($_POST['email'])."', '".trim($_POST['password'])."', NULL, 'index.php')");
+$password = trim($_POST['password']);
+$password_hashed = hash("sha256", $password);
+
+mysql_query("INSERT INTO `users` (`user_id`, `user_level`, `user_email`, `user_password`, `user_date`, `user_home`) VALUES (1, 1, '".trim($_POST['email'])."', '".$password_hashed."', NULL, 'index.php')");
 
 mysql_query("CREATE TABLE `history` (
   `history_id` int(11) NOT NULL auto_increment,
