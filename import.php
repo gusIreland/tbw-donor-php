@@ -1,212 +1,123 @@
-<?php require_once('includes/config.php'); 
-ini_set('auto_detect_line_endings',TRUE);
-ob_start();
-
-include('includes/sc-includes.php');
-$pagetitle = 'Import Spreadsheet';
-
-if (!empty($_GET['csv']) && $_GET['csv'] == 'import') { 
-
-$row = 1;
-$handle = fopen ($_FILES['csv']['tmp_name'],"r");
-
-	$cf = array();
-
-while ($data = fgetcsv($handle, 1000, ",")) {
-
-    //custom field array
-    if ($row == 1) {
-    	foreach ($data as $key => $value) {
-           // echo $value;
-           // echo "<br>";
-    		if ($key > 200) {
-    			$cf[$key] = $value; 
-    		}
-    	}
+<?php 
+    require_once('includes/config.php'); 
+    ini_set('auto_detect_line_endings',TRUE);
+    ob_start();
+    
+    include('includes/sc-includes.php');
+    $pagetitle = 'Import Spreadsheet';
+    
+    if (!empty($_GET['csv']) && $_GET['csv'] == 'import' && $_FILES['csv']['tmp_name']) { 
+        $row = 1;
+        $handle = fopen ($_FILES['csv']['tmp_name'],"r");
+        $cf = array();
+        
+        while ($data = fgetcsv($handle, 1000, ",")) {
+            //custom field array
+            if ($row == 1) {
+            	foreach ($data as $key => $value) {
+                   // echo $value;
+                   // echo "<br>";
+            		if ($key > 200) {
+            			$cf[$key] = $value; 
+            		}
+            	}
+            }
+            //
+            
+            //end add extra fields
+        
+            if($row > 1){
+        
+                // check if we already have a donor by this name / email
+            
+                $matching_emails = "SELECT * FROM contacts WHERE contact_email = '".addslashes($data[15])."'";
+                $donor_id = -1;
+            
+                $result_matching_emails = mysql_query($matching_emails);
+            
+                $row_in_email_check = mysql_fetch_row($result_matching_emails);
+            
+                if($row_in_email_check){
+                    $donor_id = $row_in_email_check[0];
+                    echo $donor_id;
+                }
+    
+                else {
+                    $donor_query = "INSERT INTO contacts (contact_first, contact_last, contact_title, contact_company, contact_street, contact_city, contact_state, contact_zip, contact_country, contact_email, contact_phone, contact_fax, contact_web, contact_profile) VALUES
+                    (
+                         '".addslashes($data[1])."',
+                         '".addslashes('')."',
+                         '".addslashes('')."',
+                         '".addslashes('')."',
+                         '".addslashes($data[3])."',
+                         '".addslashes($data[12])."',
+                         '".addslashes($data[13])."',
+                         '".addslashes('')."',
+                         '".addslashes($data[14])."',
+                         '".addslashes($data[15])."',
+                         '".addslashes('')."',
+                         '".addslashes('')."',
+                         '".addslashes('')."',
+                         '".addslashes('')."'
+                    )";
+        
+                    $result =  mysql_query($donor_query);
+            
+                    if(!$result){
+                        $message  = 'Invalid query: ' . mysql_error() . "\n";
+                        $message .= 'Whole query: ' . $donor_query;
+                        die($message);
+                    }
+                
+                    $donor_id = mysql_insert_id();
+                    echo $donor_id;
+                }
+        
+                $php_dt_date_record = strtotime($data[4]);
+                $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
+                
+                $php_date_added = strtotime($data[5]);
+                $mysql_added = date('Y-m-d H:i:s', $php_date_added);
+                
+                $get_donation_for_donor = "SELECT * 
+                                           FROM contacts, donations
+                                           WHERE contacts.contact_id = donations.donor_id
+                                           AND donations.donor_id = " . $donor_id . "
+                                           AND donations.dt_date_record = '" . $mysql_dt_date_record . "'
+                                           AND donations.legal_amount = " . $data[6] . "";
+        
+                $get_matching_donations = mysql_query($get_donation_for_donor);
+                //Warning: mysql_fetch_row() expects parameter 1 to be resource, boolean given in /opt/lampp/htdocs/tbw-donor-php/import.php on line 139
+                $row_for_matching_donation = mysql_fetch_row($get_matching_donations);
+        
+                if(!$row_for_matching_donation){
+                    $donation_query = "INSERT INTO donations
+                                       VALUES ('', 
+                                       '".addslashes($data[0])."', 
+                                       '".$mysql_dt_date_record."', 
+                                       '".$mysql_added."',
+                                       '".addslashes($data[6])."',
+                                       '".addslashes($data[7])."',
+                                       '".addslashes($data[8])."',
+                                       '".addslashes($data[9])."',
+                                       '".addslashes($data[10])."',
+                                       '".addslashes($data[11])."',
+                                       '".addslashes($data[16])."', 
+                                       '".addslashes($data[17])."',
+                                       '".addslashes($donor_id)."');";
+                    $result = mysql_query($donation_query);
+          
+                    if (!$result) {
+                        $message  = 'Invalid query: ' . mysql_error() . "\n";
+                        $message .= 'Whole query: ' . $donation_query;
+                        die($message);
+                    }
+                }
+            }
+            $row++;
+        }
+    // header('Location: contacts.php');
     }
-    //
-    
-    //end add extra fields
-    
-    // $checkc = mysql_num_rows(mysql_query("SELECT * FROM contacts WHERE contact_id = ".$data[0].""));
-    
-    // if ($checkc > 0) {
-    
-    //     mysql_query("UPDATE contacts SET
-        
-    //     	contact_first = '".addslashes($data[1])."',
-    //     	contact_last = '".addslashes($data[2])."',
-    //     	contact_title = '".addslashes($data[3])."',
-    //     	contact_company = '".addslashes($data[4])."',
-    //     	contact_street = '".addslashes($data[5])."',
-    //     	contact_city = '".addslashes($data[6])."',
-    //     	contact_state = '".addslashes($data[7])."',
-    //     	contact_zip = '".addslashes($data[8])."',
-    //     	contact_country = '".addslashes($data[9])."',
-    //     	contact_email = '".addslashes($data[10])."',
-    //     	contact_phone = '".addslashes($data[11])."',
-    //     	contact_cell = '".addslashes($data[12])."',
-    //     	contact_web = '".addslashes($data[13])."',
-    //     	contact_profile = '".addslashes($data[14])."'
-        
-    //     WHERE contact_id = ".$data['0']."
-    //     ");
-    
-    // }
-    //
-    
-// else { 
-
-//echo "<br>\n<br><br><br><br>";
-
-if($row > 1){
-//echo $data[1];
-
-//     $donor_query = "INSERT INTO contacts
-//     VALUES  (contact_first, contact_street, contact_city,
-//      contact_state, contact_country,
-//      contact_email) VALUES
-
-// (
-//        '".addslashes($data[1])."',
-//        '".addslashes($data[3])."',
-//        '".addslashes($data[12])."',
-//        '".addslashes($data[13])."',
-//        '".addslashes($data[14])."',
-//        '".addslashes($data[15])."'
-// )
-
-// ";
-
-// check if we already have a donor by this name / email
-
-$matching_emails = "SELECT * FROM contacts WHERE contact_email = '".addslashes($data[15])."'";
-$donor_id = -1;
-
-$result_matching_emails = mysql_query($matching_emails);
-
-$row_in_email_check = mysql_fetch_row($result_matching_emails);
-
-if($row_in_email_check){
-  $donor_id = $row_in_email_check[0];
-  echo $donor_id;
-}
-else {
-  $donor_query = "INSERT INTO contacts (contact_first, contact_last, contact_title, contact_company, contact_street, contact_city, contact_state, contact_zip, contact_country, contact_email, contact_phone, contact_fax, contact_web, contact_profile) VALUES
-  (
-       '".addslashes($data[1])."',
-       '".addslashes('')."',
-       '".addslashes('')."',
-       '".addslashes('')."',
-       '".addslashes($data[3])."',
-       '".addslashes($data[12])."',
-       '".addslashes($data[13])."',
-       '".addslashes('')."',
-       '".addslashes($data[14])."',
-       '".addslashes($data[15])."',
-       '".addslashes('')."',
-       '".addslashes('')."',
-       '".addslashes('')."',
-       '".addslashes('')."'
-  )";
-
-  $result =  mysql_query($donor_query);
-
-  if(!$result){
-        $message  = 'Invalid query: ' . mysql_error() . "\n";
-  $message .= 'Whole query: ' . $donor_query;
-  die($message);
-  }
-  
-  $donor_id = mysql_insert_id();
-  echo $donor_id;
-}
-
-$php_dt_date_record = strtotime($data[4]);
-$mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
-
-$php_date_added = strtotime($data[5]);
-$mysql_added = date('Y-m-d H:i:s', $php_date_added);
-
-$get_donation_for_donor = "SELECT * 
-                           FROM contacts, donations
-                           WHERE contacts.contact_id = donations.donor_id
-                           AND donations.donor_id = " . $donor_id . "
-                           AND donations.dt_date_record = '" . $mysql_dt_date_record . "'
-                           AND donations.legal_amount = " . $data[6] . "";
-
-$get_matching_donations = mysql_query($get_donation_for_donor);
-//Warning: mysql_fetch_row() expects parameter 1 to be resource, boolean given in /opt/lampp/htdocs/tbw-donor-php/import.php on line 139
-$row_for_matching_donation = mysql_fetch_row($get_matching_donations);
-
-if(!$row_for_matching_donation){
-  $donation_query = "INSERT INTO donations
-                    VALUES ('', 
-                    '".addslashes($data[0])."', 
-                    '".$mysql_dt_date_record."', 
-                    '".$mysql_added."',
-                    '".addslashes($data[6])."',
-                    '".addslashes($data[7])."',
-                    '".addslashes($data[8])."',
-                    '".addslashes($data[9])."',
-                    '".addslashes($data[10])."',
-                    '".addslashes($data[11])."',
-                    '".addslashes($data[16])."', 
-                    '".addslashes($data[17])."',
-                    '".addslashes($donor_id)."');";
-//154
-  $result = mysql_query($donation_query);
-  
-  if (!$result) {
-      $message  = 'Invalid query: ' . mysql_error() . "\n";
-      $message .= 'Whole query: ' . $donation_query;
-      die($message);
-  }
-}
-
-
-
-
-//INSERT NEW RECORDS
-
-// //add extra fields
-// foreach ($cf as $key => $value) {
-
-// record_set('fields',"SELECT * FROM fields WHERE field_title = '".addslashes($value)."'");
-
-// 	if ($totalRows_fields) {
-// 		mysql_query("INSERT INTO fields_assoc (cfield_field, cfield_contact, cfield_value) VALUES
-			
-// 			(
-// 				'".$row_fields['field_id']."',
-// 				'".$cid."',
-// 				'".addslashes($data[$key])."'
-// 			)
-		
-// 		");
-// 	}
-
-// }
-//end add extra fields
-
-// mysql_query("INSERT INTO history (history_contact, history_date, history_status) VALUES
-// (
-// 	".$cid.",
-// 	".time().",
-// 	1
-// )
-// ");
-
-//
-}
-    $row++;
-}
-
-
-
-// header('Location: contacts.php');
-}
-
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -238,6 +149,12 @@ if(!$row_for_matching_donation){
             <br />
             <input name="submit" type="submit" value="Import File" />
             <a href="csv.php"></a> 
+            <?php
+                if(!$_FILES['csv']['tmp_name']){
+                    echo "<br><br>You didn't select any file to upload.  Please try uploading your file again.";
+                }
+            ?>
+
         </form></td>
       </tr>
       <tr>
