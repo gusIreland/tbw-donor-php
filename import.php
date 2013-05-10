@@ -52,22 +52,14 @@
                 }
     
                 else {
-                    $donor_query = "INSERT INTO contacts (contact_first, contact_last, contact_title, contact_company, contact_street, contact_city, contact_state, contact_zip, contact_country, contact_email, contact_phone, contact_fax, contact_web, contact_profile) VALUES
+                    $donor_query = "INSERT INTO contacts (contact_first, contact_street, contact_city, contact_state, contact_country, contact_email) VALUES
                     (
                          '".addslashes($data[1])."',
-                         '".addslashes('')."',
-                         '".addslashes('')."',
-                         '".addslashes('')."',
                          '".addslashes($data[3])."',
                          '".addslashes($data[12])."',
                          '".addslashes($data[13])."',
-                         '".addslashes('')."',
                          '".addslashes($data[14])."',
-                         '".addslashes($data[15])."',
-                         '".addslashes('')."',
-                         '".addslashes('')."',
-                         '".addslashes('')."',
-                         '".addslashes('')."'
+                         '".addslashes($data[15])."'
                     )";
         
                     $result =  mysql_query($donor_query);
@@ -151,11 +143,11 @@
 <?php include('includes/header.php'); ?>
   <div class="container">
   <div class="leftcolumn">
-    <h2> Import Contacts </h2>
+    <h2> Import Donations </h2>
     <table width="540" border="0" cellpadding="0" cellspacing="0">
       
       <tr>
-        <td colspan="2">Click on &quot;Export Contacts&quot; below to see how to set up your CSV file for importing.</td>
+        <td colspan="2">Click on &quot;Export Donations&quot; below to see how to set up your CSV file for importing.</td>
       </tr>
       <tr>
         <td colspan="2"><form name="form1" id="form1" enctype="multipart/form-data" method="post" action="?csv=import">
@@ -164,7 +156,7 @@
             <input name="submit" type="submit" value="Import File" />
             <a href="csv.php"></a> 
             <?php
-                if(!$_FILES['csv']['tmp_name']){
+                if(!$_FILES['csv']['tmp_name'] && isset($_GET['csv'])){
                     echo "<br><br>You didn't select any file to upload.  Please try uploading your file again.";
                 }
             ?>

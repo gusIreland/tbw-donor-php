@@ -335,7 +335,7 @@ function showState(d) {
 <?php include('includes/header.php'); ?>
 <div class="container">
   <div class="leftcolumn">
-    <h2><?php if ($update==1) { echo 'Update'; } else { echo 'Add'; } ?> Contact </h2>
+    <h2><?php if ($update==1) { echo 'Update'; } else { echo 'Add'; } ?> Donor </h2>
     <p>&nbsp;</p>
     <form action="" method="POST" enctype="multipart/form-data" name="form1" id="form1">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
@@ -501,7 +501,7 @@ foreach ($content_sep as $key => $value) { ?>
         </tr>
         <tr>
           <td colspan="2"><p>
-            <input type="submit" name="Submit2" value="<?php echo $update==1 ? 'Update' : 'Add'; ?> contact" />
+            <input type="submit" name="Submit2" value="<?php echo $update==1 ? 'Update' : 'Add'; ?> donor" />
           </p></td>
         </tr>
       </table>
