@@ -129,7 +129,7 @@
                                     <td><?php echo $row_contactlist['legal_amount'];?></td>
                                     <td><?php echo $row_contactlist['date_added']; ?></td>
                                     <td><?php echo $row_contactlist['match_company_name']; ?></td>
-                                    <td><a href="delete.php?donation=<?php echo $row_contactlist['id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+                                    <td><a href="delete.php?donation=<?php echo $row_contactlist['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
                                 </tr>
                             <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
                         </table>
