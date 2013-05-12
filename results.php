@@ -130,7 +130,7 @@ else
 Your search returned no donations between <?php echo date('F d Y', strtotime($startDate)); ?> and <?php echo date('F d Y', strtotime($endDate)); ?>.
 <br />
 <br />
-<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Contacts </strong><br />
+<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donations </strong><br />
 <br />
 <?php } ?>
 

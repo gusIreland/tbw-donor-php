@@ -158,7 +158,7 @@ $value = trim($value);
 }
 
 	$redirect = "contact-details.php?id=$cid";
-	redirect('Contact Added',$redirect);
+	redirect('Donor Added',$redirect);
 }
 //end add contact
 
@@ -257,7 +257,7 @@ $value = trim($value);
 	$cid = $_GET['id'];
 	$redirect = "contact-details.php?id=$cid";
 
-	redirect('Contact Updated',$redirect);
+	redirect('Donor Updated',$redirect);
 }
 
 //custom fields
@@ -269,7 +269,7 @@ record_set('fields',"SELECT * FROM fields ORDER BY field_title ASC");
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title><?php if ($update==0) { echo "Add Contact"; } ?><?php echo $row_contact['contact_first']; ?> <?php echo $row_contact['contact_last']; ?></title>
+<title><?php if ($update==0) { echo "Add Donor"; } ?><?php echo $row_contact['contact_first']; ?> <?php echo $row_contact['contact_last']; ?></title>
 <script src="includes/lib/prototype.js" type="text/javascript"></script>
 <script src="includes/src/effects.js" type="text/javascript"></script>
 <script src="includes/validation.js" type="text/javascript"></script>
@@ -357,7 +357,7 @@ function showState(d) {
         </tr>
         <tr>
           <td colspan="2"><hr />
-         <?php if ($update!=1) { ?>   <p><a href="#" onclick="new Effect.toggle('morecontact', 'slide'); return false;">+Add more contact information </a></p>
+         <?php if ($update!=1) { ?>   <p><a href="#" onclick="new Effect.toggle('morecontact', 'slide'); return false;">+Add more donor information </a></p>
          <br />
          <?php } ?>
 
