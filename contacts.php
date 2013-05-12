@@ -81,7 +81,7 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
 No donors have been added yet.
 <br />
 <br />
-<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Contacts </strong><br />
+<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donors </strong><br />
 <br />
 <?php } ?>
 
