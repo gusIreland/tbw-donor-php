@@ -65,20 +65,19 @@
                         
                     // }
 
-                    $donor_query = "INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
+                    $donor_insert_query = mysql_query("INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
                     (
                          '".addslashes($data[2])."',
                          '".addslashes($data[3])."',
                          '".addslashes($data[4])."'
-                    )";
+                    )");
 
-                    $result =  mysql_query($donor_query);
-
-                    if(!$result){
+                    if(!$donor_insert_query){
                         $message  = 'Invalid query: ' . mysql_error() . "\n";
-                        $message .= 'Whole query: ' . $donor_query;
+                        $message .= 'Whole query: ' . $donor_insert_query;
                         die($message);
                     }
+
                     $donor_id = mysql_insert_id();
 
                     $contact_field = mysql_fetch_assoc(mysql_query("SELECT * FROM fields WHERE field_title = 'contact'"));
@@ -97,9 +96,18 @@
                                     '".$contact_field['field_id']."',
                                     '".addslashes($data[6])."'
                                 )");
+                    if($data[7]){
+                        $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
+                                                          VALUES ('" . $donor_id . "', '" . addslashes($data[7]) . "', '" . time() . "', '1', '0')");
 
-                    
-                    
+
+                        if(!$note_insert_query){
+                            $message  = 'Invalid query: ' . mysql_error() . "\n";
+                            $message .= 'Whole query: ' . $note_insert_query;
+                            die($message);
+                        }
+                    }
+
                     echo ($contact_field['field_id']);
                     echo ($anonymous_field['field_id']);
                 }
