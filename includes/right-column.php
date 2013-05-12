@@ -93,13 +93,13 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
 
   <?php if ($pagetitle == 'ContactDetails') { ?>
   <hr />
-  <p><strong>Contact Information</strong><br />
+  <p><strong>Contact Information</strong><br /><br />
     <?php if ($row_contact['contact_company']) { echo $row_contact['contact_company'] ."<br>"; } ?>
     <?php if ($row_contact['contact_street']) { echo $row_contact['contact_street']  ."<br>"; } ?>
     <?php if ($row_contact['contact_city']) { echo $row_contact['contact_city'] .","; } ?> <?php if ($row_contact['contact_state']) { echo $row_contact['contact_state']; } ?> <?php if ($row_contact['contact_zip']) { echo $row_contact['contact_zip']; } ?><?php if ($row_contact['contact_country']) { echo "<br>".$row_contact['contact_country']; } ?></p>
     <?php if ($row_contact['contact_street'] && $row_contact['contact_city'] && $row_contact['contact_state']) { ?><p><a href="http://maps.google.com/maps?f=q&amp;hl=en&amp;q=<?php echo $row_contact['contact_street']; ?>,+<?php echo $row_contact['contact_city']; ?>,+<?php echo $row_contact['contact_state']; ?>+<?php echo $row_contact['contact_zip']; ?>&gt;" target="_blank">+ View Map </a></p>
     <?php } ?>
-    <hr />
+    <br/>
     <p>      <?php if ($row_contact['contact_phone']) { ?>Phone: <?php echo $row_contact['contact_phone']; ?><br /><?php } ?>
 
       <?php if ($row_contact['contact_web']) { ?>
@@ -110,7 +110,7 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
       <a href="mailto:<?php echo $row_contact['contact_email']; ?>"><?php echo $row_contact['contact_email']; ?></a>        
       <?php } ?>
 
-    </p>
+    </p><hr />
     <?php if ($row_contact['contact_profile']) { ?>   
     <hr />
     <strong>Background</strong><br />

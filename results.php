@@ -4,37 +4,46 @@ $pagetitle = 'Result';
 
 //SORTING
 $sorder = '';
-$name = "name_up";
-if (isset($_GET['name_up'])) {
-  $sorder = "ORDER BY contact_last ASC";
-  $name = "name_down";
-} elseif (isset($_GET['name_down'])) {
-  $sorder = "ORDER BY contact_last DESC";
-}
+    $name = "name_up";
+    if (isset($_GET['name_up'])) {
+        $sorder = "ORDER BY contact_first ASC";
+        $name = "name_down";
+    } elseif (isset($_GET['name_down'])) {
+        $sorder = "ORDER BY contact_first DESC";
+    }
+    
+    $campaign = "campaign_up";
+    if (isset($_GET['campaign_up'])) {
+        $sorder = "ORDER BY alloc_short_name ASC";
+        $campaign = "campaign_down";
+    } elseif (isset($_GET['campaign_down'])) {
+        $sorder = "ORDER BY alloc_short_name DESC";
+    }
+    
+    $amount = "amount_up";
+    if (isset($_GET['amount_up'])) {
+        $sorder = "ORDER BY legal_amount ASC";
+        $amount = "amount_down";
+    } elseif (isset($_GET['email_phone'])) {
+        $sorder = "ORDER BY legal_amount DESC";
+    }
+    
+    $date = "date_up";
+    if (isset($_GET['date_up'])) {
+        $sorder = "ORDER BY dt_date_record ASC";
+        $date = "date_down";
+    } elseif (isset($_GET['date_down'])) {
+        $sorder = "ORDER BY dt_date_record DESC";
+    }
 
-$number = "number_up";
-if (isset($_GET['number_up'])) {
-  $sorder = "ORDER BY count ASC";
-  $number = "number_down";
-} elseif (isset($_GET['email_down'])) {
-  $sorder = "ORDER BY count DESC";
-}
+    $matching_company = "matching_company_up";
+    if (isset($_GET['matching_company_up'])) {
+        $sorder = "ORDER BY match_company_name ASC";
+        $matching_company = "matching_company_down";
+    } elseif (isset($_GET['matching_company_down'])) {
+        $sorder = "ORDER BY match_company_name DESC";
+    }
 
-$amount = "amount_up";
-if (isset($_GET['amount_up'])) {
-  $sorder = "ORDER BY contact_phone ASC";
-  $amount = "amount_down";
-} elseif (isset($_GET['email_phone'])) {
-  $sorder = "ORDER BY contact_phone DESC";
-}
-
-$date = "date_up";
-if (isset($_GET['date_up'])) {
-  $sorder = "ORDER BY contact_phone ASC";
-  $date = "date_down";
-} elseif (isset($_GET['email_phone'])) {
-  $sorder = "ORDER BY contact_phone DESC";
-}
 
 //END SORTING
 
@@ -80,11 +89,13 @@ if($search == 1){
   $endDateString = "\"".$endDate ."\"";
   $startDateString = "\"".$startDate ."\"";
   $query = "SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit";
-  record_set('contact_list',"SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit");
+  record_set('contact_list',"SELECT * FROM donations, contacts where date_added between $startDateString and $endDateString AND donations.donor_id = contacts.contact_id $sorder $limit");
+   // record_set('contactlist',"SELECT * FROM donations, contacts WHERE donations.donor_id = contacts.contact_id $sorder $limit");
 }
 else
-record_set('contact_list',"SELECT * FROM donations $sorder $limit ");
- 
+// record_set('contact_list',"SELECT * FROM donations $sorder $limit ");
+  // record_set('contactlist',"SELECT * FROM donations, contacts WHERE donations.donor_id = contacts.contact_id $sorder $limit");
+  record_set('contact_list',"SELECT * FROM donations, contacts where date_added between $startDateString and $endDateString AND donations.donor_id = contacts.contact_id $sorder $limit");
  function hello(){
   global $query, $startDateString, $endDateString, $sorder, $limit;
   $stripped_query = str_replace('"', "'", $query);
@@ -136,21 +147,31 @@ No contacts have been added yet.
       </tr>
       <tr>
         <th width="26%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Donor Name</a></th>
-        <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $number; ?>">Reciept </a></th>
+        <th width="27%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>">Campaign </a></th>
         <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>">Donation Amount</a></th>
         <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>">Date of Donation</a></th>
-
+        <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $matching_company; ?>">Matching Company</a></th>
+                        
         <th width="7%">&nbsp;</th>
       </tr>
 
       <?php $row_count = 1; do {  ?>
       <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-        <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>"><?php echo $row_contact_list['donor_id']; ?> <?php echo $row_contact_list['contact_last']; ?></a></td>
+        <!-- <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>"><?php echo $row_contact_list['donor_id']; ?> <?php echo $row_contact_list['contact_last']; ?></a></td>
         <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['receipt_number'] : $na; ?></td>
        <td><?php echo $row_contact_list['legal_amount'];?></td>
        <td><?php echo $row_contact_list['date_added']; ?></td>
         <td><a href="delete.php?contact=<?php echo $row_contact_list['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
-      </tr>
+       -->
+        <td style="padding-left:5px">
+                                   <a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>"><?php echo $row_contact_list['contact_first']; ?></a></td>
+                                    <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['alloc_short_name'] : $na; ?></td>
+                                    <td><?php echo $row_contact_list['legal_amount'];?></td>
+                                    <td><?php echo $row_contact_list['date_added']; ?></td>
+                                    <td><?php echo $row_contact_list['match_company_name']; ?></td>
+                                    <td><a href="delete.php?donation=<?php echo $row_contact_list['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+                                
+     </tr>
       <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
     </table>
   </form>

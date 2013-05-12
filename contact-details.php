@@ -137,15 +137,20 @@
                     echo "<th>Date of Donation</th>";
                     echo "<th>Matching Company</th>";
                     echo "</tr>";   	
-                
+                    $counter = 0;
                     while($row = mysql_fetch_array($result_donations))
-                    {
-                    	echo "<tr>";
+                    {   
+                        if ($counter%2) {
+                    	   echo "<tr bgcolor=\"#F4F4F4\" >";
+                        } else {
+                            echo "<tr>";
+                        }
                         echo "<td>" . $row['legal_amount'] . "</td>";
                         echo "<td>" . (strftime("%m/%d/%Y", strtotime($row['dt_date_record']))) . "</td>";
                         echo "<td>" . $row['match_company_name'] . "</td>";
                         echo "<td><a href=\"delete.php?donation=". $row['id'] . "&redirect=contact-details.php?id=".$_GET['id']."\" onclick=\"javascript:return confirm('Are you sure?')\">Delete</a></td>";
                         echo "</tr >";
+                        $counter = $counter +1;
                     }
 
                     echo "</table>";
