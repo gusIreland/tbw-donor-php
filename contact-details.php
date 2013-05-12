@@ -133,9 +133,10 @@
                     echo "<h3>Donations</h3>";
                     echo "<table>";
                     echo "<tr>";
-                    echo "<th>Legal Amount</th>";
-                    echo "<th>Date of Donation</th>";
-                    echo "<th>Matching Company</th>";
+                    echo "<th width=\"25%\" style=\"padding-left:5px\">Campaign</th>";
+                    echo "<th width=\"25%\"  >Legal Amount</th>";
+                    echo "<th width=\"25%\" >Date of Donation</th>";
+                    echo "<th width=\"25%\" >Matching Company</th>";
                     echo "</tr>";   	
                     $counter = 0;
                     while($row = mysql_fetch_array($result_donations))
@@ -144,6 +145,11 @@
                     	   echo "<tr bgcolor=\"#F4F4F4\" >";
                         } else {
                             echo "<tr>";
+                        }
+                        if ($row['alloc_short_name']){
+                            echo "<td style=\"padding-left:5px\">" . $row['alloc_short_name'] . "</td>";
+                        } else {
+                            echo "<td style=\"padding-left:5px\">" . $na ."</td>";
                         }
                         echo "<td>" . $row['legal_amount'] . "</td>";
                         echo "<td>" . (strftime("%m/%d/%Y", strtotime($row['dt_date_record']))) . "</td>";
