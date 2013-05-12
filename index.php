@@ -21,6 +21,8 @@ $nwhere = "WHERE note_text LIKE '%".addslashes($_GET['s'])."%' ";
 //get notes
 record_set('notes',"SELECT * FROM notes INNER JOIN contacts ON note_contact = contact_id $nwhere ORDER BY note_date DESC LIMIT 0, 20");
 
+record_set('pinned_notes', "SELECT * FROM notes, contacts WHERE note_pin = 1 AND contact_id = note_contact ORDER BY note_date DESC");
+
 
 //get contacts
 $climit = !empty($_GET['s']) ? 1000 : 10;
@@ -65,19 +67,19 @@ $comma = ",";
       <br />
     <?php } ?>
 
-<?php if ($totalRows_notes > 0) { ?>
       <h2> 
-      Notes  
+      Pinned Notes  
       </h2>
 <br />
-      <?php $i = 1; do { ?>
+     <?php $i = 1; do { ?>
+      <?php if ($row_notes['note_pin'] == 1) { ?>
 <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
         <span class="datedisplay"><a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>&note=<?php echo $row_notes['note_id']; ?>"><?php echo date('F d, Y', $row_notes['note_date']); ?></a></span> for <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>"><?php echo $row_notes['contact_first']; ?> <?php echo $row_notes['contact_last']; ?></a><br />
           <?php echo $row_notes['note_text']; ?>
 </div>
           <?php if ($totalRows_notes!=$i) { ?><hr /><?php } ?>
-              <?php $i++;  } while ($row_notes = mysql_fetch_assoc($notes)); ?>
-<?php } ?>
+          <?php } ?>
+              <?php $i++;  } while ($row_notes = mysql_fetch_assoc($pinned_notes)); ?>
   </div>
   <?php include('includes/right-column.php'); ?>
   <br clear="all" />
