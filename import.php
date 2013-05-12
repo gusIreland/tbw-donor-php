@@ -6,7 +6,7 @@
     include('includes/sc-includes.php');
     $pagetitle = 'Import Spreadsheet';
 
-    function data_empty($dataRow, $type){
+    function data_empty($dataRow, $type) {
         if($type == "donation") {
             $data_empty = true;
             foreach($dataRow as $data_value) {
@@ -18,6 +18,14 @@
         else {
             return !($dataRow[2] && $dataRow[3] && $dataRow[4]);
         }
+    }
+
+    function duplicate_donor($data) {
+        $matching_full_names = "SELECT * FROM contacts WHERE contact_first = '".addslashes($data[2])."' AND contact_last = '".addslashes($data[3])."'";
+        $result_matching_full_names = mysql_query($matching_full_names);
+        $row_matching_full_names = mysql_fetch_assoc($result_matching_full_names);
+
+        return ($row_matching_full_names && ($row_matching_full_names['contact_email'] == addslashes($data[4])));
     }
     
     if (!empty($_GET['csv']) && $_GET['csv'] == 'import' && $_FILES['csv']['tmp_name']) { 
@@ -51,60 +59,48 @@
                 // check if we already have a donor by this name / email
             
                 if($csv_type == "donor"){
-                    
-                    // $matching_full_names = "SELECT * FROM contacts WHERE contact_first = '".addslashes($data[2])."' AND contact_last = '".addslashes($data[3])."' AND contact_email IS NOT NULL AND contact_email = '".addslashes($data[4])."'";
-                    // $donor_id = -1;
-            
-                    // $result_matching_emails = mysql_query($matching_emails);
-            
-                    // $row_in_email_check = mysql_fetch_row($result_matching_emails);
-            
-                    // if($row_in_email_check){
-                    //     $donor_id = $row_in_email_check[0];
-                    //     // echo $donor_id;
-                        
-                    // }
-
-                    $donor_insert_query = mysql_query("INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
-                    (
-                         '".addslashes($data[2])."',
-                         '".addslashes($data[3])."',
-                         '".addslashes($data[4])."'
-                    )");
-
-                    if(!$donor_insert_query){
-                        $message  = 'Invalid query: ' . mysql_error() . "\n";
-                        $message .= 'Whole query: ' . $donor_insert_query;
-                        die($message);
-                    }
-
-                    $donor_id = mysql_insert_id();
-
-                    $contact_field = mysql_fetch_assoc(mysql_query("SELECT * FROM fields WHERE field_title = 'contact'"));
-                    $anonymous_field = $field = mysql_fetch_assoc(mysql_query("SELECT * FROM fields WHERE field_title = 'anonymous'"));
-
-                    $cf_query = mysql_query("INSERT INTO fields_assoc (cfield_contact, cfield_field, cfield_value) VALUES
-                                (
-                                    '".$donor_id."',
-                                    '".$anonymous_field['field_id']."',
-                                    '".addslashes($data[5])."'
-                                )");
-
-                    $cf_query = mysql_query("INSERT INTO fields_assoc (cfield_contact, cfield_field, cfield_value) VALUES
-                                (
-                                    '".$donor_id."',
-                                    '".$contact_field['field_id']."',
-                                    '".addslashes($data[6])."'
-                                )");
-                    if($data[7]){
-                        $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
-                                                          VALUES ('" . $donor_id . "', '" . addslashes($data[7]) . "', '" . time() . "', '1', '0')");
-
-
-                        if(!$note_insert_query){
+                    if(!duplicate_donor($data)) {
+                        $donor_insert_query = mysql_query("INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
+                        (
+                             '".addslashes($data[2])."',
+                             '".addslashes($data[3])."',
+                             '".addslashes($data[4])."'
+                        )");
+    
+                        if(!$donor_insert_query){
                             $message  = 'Invalid query: ' . mysql_error() . "\n";
-                            $message .= 'Whole query: ' . $note_insert_query;
+                            $message .= 'Whole query: ' . $donor_insert_query;
                             die($message);
+                        }
+    
+                        $donor_id = mysql_insert_id();
+    
+                        $contact_field = mysql_fetch_assoc(mysql_query("SELECT * FROM fields WHERE field_title = 'contact'"));
+                        $anonymous_field = $field = mysql_fetch_assoc(mysql_query("SELECT * FROM fields WHERE field_title = 'anonymous'"));
+    
+                        $cf_query = mysql_query("INSERT INTO fields_assoc (cfield_contact, cfield_field, cfield_value) VALUES
+                                    (
+                                        '".$donor_id."',
+                                        '".$anonymous_field['field_id']."',
+                                        '".addslashes($data[5])."'
+                                    )");
+    
+                        $cf_query = mysql_query("INSERT INTO fields_assoc (cfield_contact, cfield_field, cfield_value) VALUES
+                                    (
+                                        '".$donor_id."',
+                                        '".$contact_field['field_id']."',
+                                        '".addslashes($data[6])."'
+                                    )");
+                        if($data[7]){
+                            $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
+                                                              VALUES ('" . $donor_id . "', '" . addslashes($data[7]) . "', '" . time() . "', '1', '0')");
+    
+    
+                            if(!$note_insert_query){
+                                $message  = 'Invalid query: ' . mysql_error() . "\n";
+                                $message .= 'Whole query: ' . $note_insert_query;
+                                die($message);
+                            }
                         }
                     }
 
