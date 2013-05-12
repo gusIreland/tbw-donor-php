@@ -6,10 +6,10 @@ $pagetitle = 'Donor';
 $sorder = '';
 $name = "name_up";
 if (isset($_GET['name_up'])) {
-$sorder = "ORDER BY contact_last ASC";
+$sorder = "ORDER BY contact_last ASC, contact_first ASC";
 $name = "name_down";
 } elseif (isset($_GET['name_down'])) {
-$sorder = "ORDER BY contact_last DESC";
+$sorder = "ORDER BY contact_last DESC, contact_first DESC";
 }
 
 $email = "email_up";
@@ -98,7 +98,7 @@ No donors have been added yet.
         </tr>
         <tr>
           <th width="26%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Name</a></th>
-          <th width="40%"><a href="mailto:"+Email>Email</a></th>
+          <th width="40%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $email; ?>">Email</a></th>
           <th width="7%">&nbsp;</th>
         </tr>
 
