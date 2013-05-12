@@ -27,6 +27,40 @@
 
         return ($row_matching_full_names && ($row_matching_full_names['contact_email'] == addslashes($data[4])));
     }
+
+    function duplicate_donation($data) {
+        $recipt_number = $data[11];
+        $receipt_number_query = "SELECT * FROM donations WHERE receipt_number = '". $recipt_number . "'";
+        $result_receipt_number = mysql_query($receipt_number_query);
+        return (mysql_num_rows($result_receipt_number) > 0);
+    }
+
+    function find_donor($data) {
+        $email = $data[15];
+        $name_to_match = $data[1];
+        
+        $donors_query = "SELECT * FROM contacts";
+        $donors_result = mysql_query($donors_query);
+
+        $donor_id = -1;
+
+        if ($donors_result) {
+            while($row = mysql_fetch_assoc($donors_result)) {
+                $possible_match = $row['contact_first'] . " " . $row['contact_last'];
+                echo $possible_match;
+                echo "<br>";
+                echo $name_to_match;
+                echo "<br>";
+                if(strpos($name_to_match, $possible_match) > -1) {
+                    $donor_id = $row['contact_id'];
+                    echo $donor_id;
+                    echo "<br>";
+                }
+                echo "<br>";
+            }
+        }
+        return $donor_id;
+    }
     
     if (!empty($_GET['csv']) && $_GET['csv'] == 'import' && $_FILES['csv']['tmp_name']) { 
         $row = 1;
@@ -39,8 +73,6 @@
             //custom field array
             if ($row == 1) {
             	foreach ($data as $key => $value) {
-                   // echo $value;
-                   // echo "<br>";
             		if ($key > 200) {
             			$cf[$key] = $value; 
             		}
@@ -54,10 +86,8 @@
             
             //end add extra fields
         
-            if($row > 1 && !data_empty($data, $type)){
-                echo $csv_type;
-                // check if we already have a donor by this name / email
-            
+            if($row > 1 && !data_empty($data, $csv_type)) {
+                // we are importing new donors
                 if($csv_type == "donor"){
                     if(!duplicate_donor($data)) {
                         $donor_insert_query = mysql_query("INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
@@ -91,10 +121,10 @@
                                         '".$contact_field['field_id']."',
                                         '".addslashes($data[6])."'
                                     )");
+
                         if($data[7]){
                             $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
                                                               VALUES ('" . $donor_id . "', '" . addslashes($data[7]) . "', '" . time() . "', '1', '0')");
-    
     
                             if(!$note_insert_query){
                                 $message  = 'Invalid query: ' . mysql_error() . "\n";
@@ -103,84 +133,69 @@
                             }
                         }
                     }
-
-                    echo ($contact_field['field_id']);
-                    echo ($anonymous_field['field_id']);
                 }
-    
+                
+                // we imported a donor spreadsheet
                 else {
-                    echo "Hi";
-                    $donor_query = "INSERT INTO contacts (contact_first, contact_street, contact_city, contact_state, contact_country, contact_email) VALUES
-                    (
-                         '".addslashes($data[1])."',
-                         '".addslashes($data[3])."',
-                         '".addslashes($data[12])."',
-                         '".addslashes($data[13])."',
-                         '".addslashes($data[14])."',
-                         '".addslashes($data[15])."'
-                    )";
+                    // $donor_query = "INSERT INTO contacts (contact_first, contact_street, contact_city, contact_state, contact_country, contact_email) VALUES
+                    // (
+                    //      '".addslashes($data[1])."',
+                    //      '".addslashes($data[3])."',
+                    //      '".addslashes($data[12])."',
+                    //      '".addslashes($data[13])."',
+                    //      '".addslashes($data[14])."',
+                    //      '".addslashes($data[15])."'
+                    // )";
         
-                    $result =  mysql_query($donor_query);
+                    // $result =  mysql_query($donor_query);
             
-                    if(!$result){
-                        $message  = 'Invalid query: ' . mysql_error() . "\n";
-                        $message .= 'Whole query: ' . $donor_query;
-                        die($message);
-                    }
-                
-                    $donor_id = mysql_insert_id();
-                    // echo $donor_id;
-                
-        
-                    $php_dt_date_record = strtotime($data[4]);
-                    $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
-                    // echo "<br>";
-                    // echo $php_dt_date_record;
-                    // echo "<br>";
-                    // echo $mysql_dt_date_record;
-                    // echo "<br>";
+                    // if(!$result){
+                    //     $message  = 'Invalid query: ' . mysql_error() . "\n";
+                    //     $message .= 'Whole query: ' . $donor_query;
+                    //     die($message);
+                    // }
                     
-                    $php_date_added = strtotime($data[5]);
-                    $mysql_added = date('Y-m-d H:i:s', $php_date_added);
+                    echo "<br><br><br>";
+                
+                    if(!(duplicate_donation($data))) {
+                        $donor_id = find_donor($data);
+                        if($donor_id != -1) {
+                            echo $donor_id;                       
+                
+                            $php_dt_date_record = strtotime($data[4]);
+                            $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
+                            
+                            $php_date_added = strtotime($data[5]);
+                            $mysql_added = date('Y-m-d H:i:s', $php_date_added);
+                            
+                            $donation_query = "INSERT INTO donations
+                                               VALUES ('', 
+                                               '".addslashes($data[0])."', 
+                                               '".$mysql_dt_date_record."', 
+                                               '".$mysql_added."',
+                                               '".addslashes($data[6])."',
+                                               '".addslashes($data[7])."',
+                                               '".addslashes($data[8])."',
+                                               '".addslashes($data[9])."',
+                                               '".addslashes($data[10])."',
+                                               '".addslashes($data[11])."',
+                                               '".addslashes($data[16])."', 
+                                               '".addslashes($data[17])."',
+                                               '".addslashes($donor_id)."');";
+                            $result = mysql_query($donation_query);
                     
-                    $get_donation_for_donor = "SELECT * 
-                                               FROM contacts, donations
-                                               WHERE contacts.contact_id = donations.donor_id
-                                               AND donations.donor_id = " . $donor_id . "
-                                               AND donations.dt_date_record = '" . $mysql_dt_date_record . "'
-                                               AND donations.legal_amount = " . $data[6] . "";
-            
-                    $get_matching_donations = mysql_query($get_donation_for_donor);
-                    $row_for_matching_donation = mysql_fetch_row($get_matching_donations);
-            
-                    if(!$row_for_matching_donation){
-                        $donation_query = "INSERT INTO donations
-                                           VALUES ('', 
-                                           '".addslashes($data[0])."', 
-                                           '".$mysql_dt_date_record."', 
-                                           '".$mysql_added."',
-                                           '".addslashes($data[6])."',
-                                           '".addslashes($data[7])."',
-                                           '".addslashes($data[8])."',
-                                           '".addslashes($data[9])."',
-                                           '".addslashes($data[10])."',
-                                           '".addslashes($data[11])."',
-                                           '".addslashes($data[16])."', 
-                                           '".addslashes($data[17])."',
-                                           '".addslashes($donor_id)."');";
-                        $result = mysql_query($donation_query);
-            
-                        if (!$result) {
-                            $message  = 'Invalid query: ' . mysql_error() . "\n";
-                            $message .= 'Whole query: ' . $donation_query;
-                            die($message);
+                            if (!$result) {
+                                $message  = 'Invalid query: ' . mysql_error() . "\n";
+                                $message .= 'Whole query: ' . $donation_query;
+                                die($message);
+                            }
                         }
                     }
                 }
             }
             $row++;
         }
-    exit;
+    // exit;
     header('Location: contacts.php?import=success');
     }
 ?>
