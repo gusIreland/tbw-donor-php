@@ -86,7 +86,7 @@
             
             //end add extra fields
         
-            if($row > 1 && !data_empty($data, $type)) {
+            if($row > 1 && !data_empty($data, $csv_type)) {
                 // we are importing new donors
                 if($csv_type == "donor"){
                     if(!duplicate_donor($data)) {
@@ -154,6 +154,8 @@
                     //     $message .= 'Whole query: ' . $donor_query;
                     //     die($message);
                     // }
+                    
+                    echo "<br><br><br>";
                 
                     if(!(duplicate_donation($data))) {
                         $donor_id = find_donor($data);
@@ -193,7 +195,7 @@
             }
             $row++;
         }
-    exit;
+    // exit;
     header('Location: contacts.php?import=success');
     }
 ?>
