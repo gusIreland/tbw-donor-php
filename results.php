@@ -164,7 +164,7 @@
                                         </a>
                                     </td>
                                     <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['alloc_short_name'] : $na; ?></td>
-                                    <td><?php echo $row_contact_list['legal_amount'];?></td>
+                                    <td><?php if ($user_admin)  echo "$". $row_contact_list['legal_amount'];?></td>
                                     <td><?php echo $row_contact_list['date_added']; ?></td>
                                     <td><?php echo $row_contact_list['match_company_name']; ?></td>
                                     <td>

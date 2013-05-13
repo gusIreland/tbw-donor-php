@@ -209,7 +209,6 @@
                 <h2> Import Donations </h2>
                 <table width="540" border="0" cellpadding="0" cellspacing="0">
                     <tr>
-                        <td colspan="2">Click on &quot;Export Donations&quot; below to see how to set up your CSV file for importing.</td>
                     </tr>
                     <tr>
                         <td colspan="2">
