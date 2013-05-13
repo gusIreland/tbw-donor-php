@@ -39,16 +39,16 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
     <input name="s" type="text" id="s" onfocus="MM_setTextOfTextfield('s','','')" value="Search" size="15" />
     <input type="submit" name="Submit_search" value="Go" />
   </form>
-  <p><strong>Search donations within a range</strong><br />
-  
+  <br />
+  <p><p style="margin-bottom:-10px"><strong >Search donations within a range:</strong></p><br />
   <form action="results.php" method="post">
-    <div style="float: left; padding-right: 3px; line-height: 18px;">from:</div>
+    <div style="float: left; padding-right: 3px; line-height: 18px;">From:</div>
     <?php
 //get class into the page
     require_once('includes/calendar/classes/tc_calendar.php');
 //instantiate class and set properties
-    $date3_default = "1990-04-29";
-    $date4_default = "2013-05-05";
+    $date3_default = "1990-01-01";
+    $date4_default = "2020-01-01";
 
     $myCalendar = new tc_calendar("dateStart", true, false);
     $myCalendar->setIcon("includes/calendar/images/iconCalendar.gif");
@@ -61,7 +61,9 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
     $myCalendar->setDatePair('dateStart', 'dateEnd', $dateEnd_default);
     $myCalendar->writeScript();   
     ?>
-    <div style="float: left; padding-right: 3px; line-height: 18px;">to:</div>
+    <br />
+    <br />
+    <div style="float: left; padding-right: 3px; line-height: 18px;">To:</div>
     <?php
     $myCalendar = new tc_calendar("dateEnd", true, false);
     $myCalendar->setIcon("includes/calendar/images/iconCalendar.gif");
@@ -74,11 +76,12 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
     $myCalendar->setDatePair('dateStart', 'dateEnd', $dateStart_default);
     $myCalendar->writeScript();   
     ?>
-    <input type="submit" name="button" id="button" value="Submit"/>
+    <br/><p style="margin-bottom: 8px"></p><input type="submit" name="button" id="button" value="Submit"/>
   </form>
 
   <?php } ?>
-  <p><br />
+  <p>
+    <a class="addcontact"></a>
     <a class="addcontact" href="contact.php" <?php if ($pagetitle == 'ContactDetails') { ?>style="border-bottom:0px"<?php } ?>>Add Donor</a>  
 
     <?php if ($user_admin && $pagetitle != 'ContactDetails') { ?>
@@ -90,13 +93,12 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
 
   <?php if ($pagetitle == 'ContactDetails') { ?>
   <hr />
-  <p><strong>Contact Information</strong><br />
+  <p><strong>Donor Information</strong><br/><br />
     <?php if ($row_contact['contact_company']) { echo $row_contact['contact_company'] ."<br>"; } ?>
     <?php if ($row_contact['contact_street']) { echo $row_contact['contact_street']  ."<br>"; } ?>
     <?php if ($row_contact['contact_city']) { echo $row_contact['contact_city'] .","; } ?> <?php if ($row_contact['contact_state']) { echo $row_contact['contact_state']; } ?> <?php if ($row_contact['contact_zip']) { echo $row_contact['contact_zip']; } ?><?php if ($row_contact['contact_country']) { echo "<br>".$row_contact['contact_country']; } ?></p>
-    <?php if ($row_contact['contact_street'] && $row_contact['contact_city'] && $row_contact['contact_state']) { ?><p><a href="http://maps.google.com/maps?f=q&amp;hl=en&amp;q=<?php echo $row_contact['contact_street']; ?>,+<?php echo $row_contact['contact_city']; ?>,+<?php echo $row_contact['contact_state']; ?>+<?php echo $row_contact['contact_zip']; ?>&gt;" target="_blank">+ View Map </a></p>
+    <?php if ($row_contact['contact_street'] && $row_contact['contact_city'] && $row_contact['contact_state']) { ?><p><a href="http://maps.google.com/maps?f=q&amp;hl=en&amp;q=<?php echo $row_contact['contact_street']; ?>,+<?php echo $row_contact['contact_city']; ?>,+<?php echo $row_contact['contact_state']; ?>+<?php echo $row_contact['contact_zip']; ?>&gt;" target="_blank">+ View Map </a></p><br />
     <?php } ?>
-    <hr />
     <p>      <?php if ($row_contact['contact_phone']) { ?>Phone: <?php echo $row_contact['contact_phone']; ?><br /><?php } ?>
 
       <?php if ($row_contact['contact_web']) { ?>
@@ -107,7 +109,7 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
       <a href="mailto:<?php echo $row_contact['contact_email']; ?>"><?php echo $row_contact['contact_email']; ?></a>        
       <?php } ?>
 
-    </p>
+    </p><hr />
     <?php if ($row_contact['contact_profile']) { ?>   
     <hr />
     <strong>Background</strong><br />

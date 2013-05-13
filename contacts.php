@@ -6,10 +6,10 @@ $pagetitle = 'Donor';
 $sorder = '';
 $name = "name_up";
 if (isset($_GET['name_up'])) {
-$sorder = "ORDER BY contact_last ASC";
+$sorder = "ORDER BY contact_last ASC, contact_first ASC";
 $name = "name_down";
 } elseif (isset($_GET['name_down'])) {
-$sorder = "ORDER BY contact_last DESC";
+$sorder = "ORDER BY contact_last DESC, contact_first DESC";
 }
 
 $email = "email_up";
@@ -81,7 +81,7 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
 No donors have been added yet.
 <br />
 <br />
-<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Contacts </strong><br />
+<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donors </strong><br />
 <br />
 <?php } ?>
 
