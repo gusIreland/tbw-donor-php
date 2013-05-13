@@ -1,7 +1,6 @@
 <?php 
     require_once('includes/config.php');
     include('includes/sc-includes.php');
-    
     // get the variables from the post
     if(isset($_POST["start_date"]) && isset($_POST["end_date"]) && isset($_POST["order"]) && isset($_POST["pp"]) && isset($_POST["offset"])){
         $startDateString = isset($_POST["start_date"]) ? $_POST["start_date"] : "";
@@ -9,12 +8,37 @@
         $sorder = isset($_POST["order"]) ? $_POST["order"] : "";
         $pp = isset($_POST["pp"]) ? $_POST["pp"] : "";
         $offset = isset($_POST["offset"]) ? $_POST["offset"] : "";
-    }
+        $limit = "LIMIT $offset, $pp";
 
-    // generate a new query based on the information
-    $limit = "LIMIT $offset, $pp";
-    // $query = "SELECT * FROM donations where date_added between $startDateString and $endDateString $sorder $limit;";
-    $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id where date_added between $startDateString and $endDateString $sorder $limit;";
+        $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id where date_added between $startDateString and $endDateString $sorder $limit;";
+    } 
+
+    elseif(isset($_POST['comparison_string'])) {
+        $comparison = $_POST['comparison_string'];
+        if(isset($comparison) && preg_match("/^\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$comparison."' ORDER BY legal_amount DESC";
+        }
+    
+        elseif(isset($comparison) && preg_match("/^<\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($comparison, 1)."' ORDER BY legal_amount DESC";
+        }
+    
+        elseif(isset($comparison) && preg_match("/^>\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($comparison, 1)."' ORDER BY legal_amount DESC";
+        }
+    
+        elseif(isset($comparison) && preg_match("/^<=\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($comparison, 2)."' ORDER BY legal_amount DESC";
+        }
+    
+        elseif(isset($comparison) && preg_match("/^>=\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($comparison, 2)."' ORDER BY legal_amount DESC";
+        }
+    } 
+
+    else {
+        exit;
+    }
     
     //get donations list
     record_set('donationlist',$query);
