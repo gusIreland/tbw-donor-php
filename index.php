@@ -24,7 +24,7 @@
     
     //get notes
     // record_set('notes',"SELECT * FROM notes INNER JOIN contacts ON note_contact = contact_id $nwhere ORDER BY note_date DESC LIMIT 0, 20");
-    $query = "SELECT * FROM notes, contacts WHERE note_pin = 1 AND contact_id = note_contact ORDER BY note_date DESC";
+    $query = "SELECT * FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user ORDER BY note_date DESC";
     $pinned_notes = mysql_query($query);    
     
     //get contacts
@@ -89,7 +89,7 @@
                                 </span> for 
                                 <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>">
                                         <?php echo $row_notes['contact_first']; ?> <?php echo $row_notes['contact_last']; ?>
-                                </a>
+                                </a> - last updated by <?php echo $row_notes['user_email'] ?>
                                 <br />
                                 <?php echo $row_notes['note_text']; ?>
                             </div>

@@ -23,15 +23,15 @@
     
     
     //notes
-    record_set('notes',"SELECT * FROM notes WHERE note_contact = ".$_GET['id']." ORDER BY note_date DESC");
+    record_set('notes',"SELECT * FROM notes, users WHERE notes.note_user = users.user_id AND note_contact = ".$_GET['id']." ORDER BY note_date DESC");
     
     record_set('note',"SELECT * FROM notes WHERE note_id = -1");
 
-    if ($update==1) {
+    if ($update == 1) {
         record_set('note',"SELECT * FROM notes WHERE note_id = ".$_GET['note']."");
     }
     
-        //INSERT NOTE FOR CONTACT
+    //INSERT NOTE FOR CONTACT
     if ($update == 0 && !empty($_POST['note_text'])) {
         $is_pinned = $_POST["pinned"];
 
@@ -39,13 +39,14 @@
             $pin = 1;
         }
 
-        mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_pin) VALUES 
+        mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_pin, note_user) VALUES 
           (
           ".$row_contact['contact_id'].",
           '".addslashes($_POST['note_text'])."',
           ".time().",
           1,
-          ".$pin."
+          ". $pin .",
+          '" . $row_userinfo['user_id'] . "' 
           )
         ");
       
@@ -64,8 +65,9 @@
             $pin = 0;
         }
       
-        mysql_query("UPDATE notes SET note_text = '".addslashes($_POST['note_text'])."',
-                                      note_pin =  '".$pin."'
+        mysql_query("UPDATE notes SET note_text = '" . addslashes($_POST['note_text']) . "',
+                                      note_pin =  '" . $pin . "',
+                                      note_user = '" . $row_userinfo['user_id'] . "' 
                                       WHERE note_id = ".$_GET['note']."");
     
       $goto = "contact-details.php?id=$_GET[id]";
@@ -192,7 +194,13 @@
                     <br />
                 </p>
         
-                <?php if (!$update) { echo "Add a new note <br>"; } ?>
+                <?php 
+                    if (!$update) { 
+                        echo "Add a new note <br>"; 
+                    } else {
+                        echo "<br><br><h2>Updating Note</h3>";
+                    }
+                ?>
         
                 <form action="" method="POST" enctype="multipart/form-data" name="form1" id="form1">
                     <textarea name="note_text" style="width:95% "rows="2" id="note_text"><?php echo $row_note['note_text']; ?></textarea>
@@ -200,22 +208,29 @@
                     Pinned?<input type="checkbox" name="pinned" value="true" <?php if ($row_note['note_pin']) {echo "checked";}?>></input>
                     <input type="submit" name="Submit2" value="<?php if ($update==1) { echo 'Update'; } else { echo 'Add'; } ?> note" />
                 </form>
+                <br>
+                <br>
                 
-                <?php if ($update==1) { ?>  
-                    <a href="delete.php?note=<?php echo $row_note['note_id']; ?>&amp;id=<?php echo $row_note['note_contact']; ?>" onclick="javascript:return confirm('Are you sure you want to delete this note?')">Delete Note</a>
-                <?php } ?>
+                <?php if ($update) { ?>
 
-                <?php if ($totalRows_notes > 0) { ?>
-                    <hr />
-                    <?php do { ?>
-                        <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
-                            <span class="datedisplay">
-                                <a href="?id=<?php echo $row_contact['contact_id']; ?>&note=<?php echo $row_notes['note_id']; ?>"><?php echo date('F d, Y', $row_notes['note_date']); ?></a>
-                            </span><br />
-                            <?php echo $row_notes['note_text']; ?>
-                        </div>
+                    <a href="delete.php?note=<?php echo $row_note['note_id']; ?>&amp;id=<?php echo $row_note['note_contact']; ?>" onclick="javascript:return confirm('Are you sure you want to delete this note?')">Delete Note</a>
+                <?php } else { ?>
+
+                    <?php if ($totalRows_notes > 0) { ?>
                         <hr />
-                    <?php } while ($row_notes = mysql_fetch_assoc($notes)); ?>
+                        <?php do { ?>
+                            <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
+                                <span class="datedisplay">
+                                    <a href="?id=<?php echo $row_contact['contact_id']; ?>&note=<?php echo $row_notes['note_id']; ?>">
+                                        <?php echo date('F d, Y', $row_notes['note_date']); ?>
+                                    </a>
+                                </span> - last updated by <?php echo $row_notes['user_email'] ?>
+                                <br />
+                                <?php echo $row_notes['note_text']; ?>
+                            </div>
+                            <hr />
+                        <?php } while ($row_notes = mysql_fetch_assoc($notes)); ?>
+                    <?php } ?>
                 <?php } ?>
             </div>
             <?php include('includes/right-column.php'); ?>
