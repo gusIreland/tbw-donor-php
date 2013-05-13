@@ -21,6 +21,49 @@
         $search = 1;
         $nwhere = "WHERE note_text LIKE '%".addslashes($_GET['s'])."%' ";
     }
+    //SORTING
+    $sorder = '';
+    $name = "name_up";
+    if (isset($_GET['name_up'])) {
+        $sorder = "ORDER BY contact_first ASC";
+        $name = "name_down";
+    } elseif (isset($_GET['name_down'])) {
+        $sorder = "ORDER BY contact_first DESC";
+    }
+    
+    $campaign = "campaign_up";
+    if (isset($_GET['campaign_up'])) {
+        $sorder = "ORDER BY alloc_short_name ASC";
+        $campaign = "campaign_down";
+    } elseif (isset($_GET['campaign_down'])) {
+        $sorder = "ORDER BY alloc_short_name DESC";
+    }
+    
+    $amount = "amount_up";
+    if (isset($_GET['amount_up'])) {
+        $sorder = "ORDER BY legal_amount ASC";
+        $amount = "amount_down";
+    } elseif (isset($_GET['email_phone'])) {
+        $sorder = "ORDER BY legal_amount DESC";
+    }
+    
+    $date = "date_up";
+    if (isset($_GET['date_up'])) {
+        $sorder = "ORDER BY dt_date_record ASC";
+        $date = "date_down";
+    } elseif (isset($_GET['date_down'])) {
+        $sorder = "ORDER BY dt_date_record DESC";
+    }
+
+    $matching_company = "matching_company_up";
+    if (isset($_GET['matching_company_up'])) {
+        $sorder = "ORDER BY match_company_name ASC";
+        $matching_company = "matching_company_down";
+    } elseif (isset($_GET['matching_company_down'])) {
+        $sorder = "ORDER BY match_company_name DESC";
+    }
+
+    //END SORTING
     
     //PAGINATION
     $limit = "";
@@ -89,13 +132,14 @@
                    
                 <?php if ($totalRows_donationslist > 0) { ?>
                     <h2>Donations</h2>
-                    <br />
+                    <!-- <br />
                     <?php $i = 1; do { 
                     ?>
                         <a href="contact-details.php?id=<?php echo $row_donationslist['contact_id']; ?>">
                             <?php echo $row_donationslist['contact_first']; ?> <?php echo $row_donationslist['contact_last']; ?>
                             - <?php echo $row_donationslist['legal_amount']; ?> for <?php echo $row_donationslist['alloc_short_name'] ?>
                         </a>
+
                         <br>
                     <?php $i++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
 
@@ -107,7 +151,41 @@
                         echo "There were no donation results"; 
                 } ?>
 
-                <br><br>
+                <br> -->
+                <form id="form1" name="form1" method="post" action="">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td colspan="4" align="right">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><?php display_msg(); ?></td>
+                            </tr>
+                            <tr>
+                                <th width="25%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Donor Name</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>">Campaign </a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>">Donation Amount</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>">Date of Donation</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $matching_company; ?>">Matching Company</a></th>
+                        
+                                <th width="7%">&nbsp;</th>
+                            </tr>
+                        
+                            <?php $row_count = 1; do {  ?>
+                                <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
+                                    <td style="padding-left:5px">
+                                        <a href="contact-details.php?id=<?php echo $row_donationslist['donor_id']; ?>"><?php echo $row_donationslist['contact_first']; ?> <?php echo $row_donationslist['contact_last']; ?></a></td>
+                                    <td><?php echo $row_donationslist['receipt_number'] ? $row_donationslist['alloc_short_name'] : $na; ?></td>
+                                    <td><?php if ($user_admin) echo "$". $row_donationslist['legal_amount']; ?></td>
+                                    <td><?php echo $row_donationslist['date_added']; ?></td>
+                                    <td><?php echo $row_donationslist['match_company_name']; ?></td>
+                                    <td><a href="delete.php?donation=<?php echo $row_donationslist['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+                                </tr>
+                            <?php $row_count++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
+                        </table>
+                    </form>
+                    <?php include('includes/pagination_donations.php'); ?>
+                    <br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>
                     <h2>Recently Viewed Donors</h2>
