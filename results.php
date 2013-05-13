@@ -142,11 +142,6 @@
         record_set('contact_list',"SELECT * FROM donations, contacts where donations.donor_id = contacts.contact_id $sorder $limit");
     }
 
-    // function hello(){
-    //   global $query, $start_date_string, $end_date_string, $sorder, $limit;
-    //   $stripped_query = str_replace('"', "'", $query);
-    //   $result = record_set('csv',$stripped_query); 
-    // }
  ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -219,7 +214,6 @@
                     </form>
                     <br />
                     <form action="csvR.php" method="post">
-                        <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
                         <input type="hidden" name="start_date" value='<?php echo $start_date_string ?>'>
                         <input type="hidden" name="end_date" value='<?php echo $end_date_string ?>'>
                         <input type="hidden" name="offset" value='<?php echo $offset ?>'>

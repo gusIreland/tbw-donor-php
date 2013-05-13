@@ -50,24 +50,30 @@
     $climit = !empty($_GET['s']) ? 1000 : 10;
     record_set('contactlist',"SELECT * FROM history RIGHT OUTER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
 
+    $comparison = '';
     if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
+        $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<=\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+        $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+        $comparison = $_GET['s'];
     }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -102,7 +108,18 @@
                     <?php if ($totalRows_donationslist > 10) { ?>
                         <a href="donations.php">View all...</a>
                     <?php } ?>
-                <?php } else { 
+                    <form action="csvR.php" method="post">
+                        <?php 
+                        echo $comparison;
+                        ?>
+
+                        <input type="hidden" name="comparison_string" value='<?php echo addslashes($comparison); ?>'>
+                        <input type="hidden" name="offset" value='<?php echo $offset ?>'>
+                        <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
+                        <input type="hidden" name="order" value='<?php echo $sorder ?>'>
+                        <input type="submit" name="button" id="button" value="Export Above Results"/>
+                    </form>
+                    <?php } else { 
                     if($_GET['s'])
                         echo "There were no donation results"; 
                 } ?>
