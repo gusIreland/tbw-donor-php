@@ -134,7 +134,7 @@
                             <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
                         </table>
                     </form>
-                    <?php include('includes/pagination_contacts.php'); ?>
+                    <?php include('includes/pagination_donations.php'); ?>
                 <?php } ?>
                 
             </div>
