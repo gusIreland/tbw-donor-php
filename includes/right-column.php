@@ -93,7 +93,7 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
 
   <?php if ($pagetitle == 'ContactDetails') { ?>
   <hr />
-  <p><strong>Contact Information</strong><br/><br />
+  <p><strong>Donor Information</strong><br/><br />
     <?php if ($row_contact['contact_company']) { echo $row_contact['contact_company'] ."<br>"; } ?>
     <?php if ($row_contact['contact_street']) { echo $row_contact['contact_street']  ."<br>"; } ?>
     <?php if ($row_contact['contact_city']) { echo $row_contact['contact_city'] .","; } ?> <?php if ($row_contact['contact_state']) { echo $row_contact['contact_state']; } ?> <?php if ($row_contact['contact_zip']) { echo $row_contact['contact_zip']; } ?><?php if ($row_contact['contact_country']) { echo "<br>".$row_contact['contact_country']; } ?></p>

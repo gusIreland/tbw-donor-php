@@ -140,7 +140,7 @@
     
                         <?php if ($can_edit) { ?>
                             <a style="font-size:12px; font-weight:normal" href="contact.php?id=<?php echo $row_contact['contact_id']; ?>">
-                                &nbsp;&nbsp;+ Edit contact
+                                &nbsp;&nbsp;+ Edit donor
                             </a>
                         <?php } ?>
                     </h2>
