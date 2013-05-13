@@ -97,6 +97,8 @@
     if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
         $comparison = $_GET['s'];
+        echo "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC";
+        exit;
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
@@ -138,38 +140,7 @@
                    
                 <?php if ($totalRows_donationslist > 0) { ?>
                     <h2>Donations</h2>
-                    <!-- <br />
-                    <?php $i = 1; do { 
-                    ?>
-                        <a href="contact-details.php?id=<?php echo $row_donationslist['contact_id']; ?>">
-                            <?php echo $row_donationslist['contact_first']; ?> <?php echo $row_donationslist['contact_last']; ?>
-                            - <?php echo $row_donationslist['legal_amount']; ?> for <?php echo $row_donationslist['alloc_short_name'] ?>
-                        </a>
-
-                        <br>
-                    <?php $i++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
-
-                    <?php if ($totalRows_donationslist > 10) { ?>
-                        <a href="donations.php">View all...</a>
-                    <?php } ?>
-                    <form action="csvR.php" method="post">
-                        <?php 
-                        echo $comparison;
-                        ?>
-
-                        <input type="hidden" name="comparison_string" value='<?php echo addslashes($comparison); ?>'>
-                        <input type="hidden" name="offset" value='<?php echo $offset ?>'>
-                        <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
-                        <input type="hidden" name="order" value='<?php echo $sorder ?>'>
-                        <input type="submit" name="button" id="button" value="Export Above Results"/>
-                    </form>
-                    <?php } else { 
-                    if($_GET['s'])
-                        echo "There were no donation results"; 
-                } ?>
-
-                <br> -->
-                <form id="form1" name="form1" method="post" action="">
+                    <form id="form1" name="form1" method="post" action="">
                         <table width="100%" border="0" cellspacing="0" cellpadding="0">
                             <tr>
                                 <td colspan="4" align="right">
@@ -201,8 +172,20 @@
                             <?php $row_count++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
                         </table>
                     </form>
-                    <?php include('includes/pagination_donations.php'); ?>
                     <br>
+                    <form action="csvR.php" method="post">
+                        <input type="hidden" name="comparison_string" value='<?php echo addslashes($comparison); ?>'>
+                        <input type="hidden" name="offset" value='<?php echo $offset ?>'>
+                        <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
+                        <input type="hidden" name="order" value='<?php echo $sorder ?>'>
+                        <input type="submit" name="button" id="button" value="Export Above Results"/>
+                    </form>
+                    <?php } else { 
+                    if($_GET['s'])
+                        echo "There were no donation results"; 
+                } ?>
+
+                <br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>
                     <h2>Recently Viewed Donors</h2>
