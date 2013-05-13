@@ -89,7 +89,7 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
 
     <?php if ($user_admin && $pagetitle != 'ContactDetails') { ?>
     <a class="addcontact" href="import.php">Import/Export </a>
-    <a class="addcontact" href="fields.php" style="border-bottom:0px">Custom Fields </a>
+    <a class="addcontact" href="fields.php" style="border-bottom:0px">Add Additional Donor Info</a>
     <?php } ?>
 
   </p>

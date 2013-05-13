@@ -115,6 +115,10 @@
                                         '".addslashes(ltrim(rtrim($data[6])))."'
                                     )");
 
+                        $donor_has_no_donations = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user, note_pin)
+                                                              VALUES ('" . $donor_id . "', '" . 'This donor has no donations!' . "', '" . time() . "', '1', '0', 1)");
+
+
                         if($data[7]){
                             $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
                                                               VALUES ('" . $donor_id . "', '" . addslashes(ltrim(rtrim($data[7]))) . "', '" . time() . "', '1', '0')");
@@ -172,7 +176,15 @@
                                                '".addslashes(ltrim(rtrim($data[17])))."',
                                                '".addslashes(ltrim(rtrim($donor_id)))."');";
                             $result = mysql_query($donation_query);
-                    
+
+                            $find_no_donations_note = mysql_query("SELECT * FROM notes WHERE note_contact = '" . $donor_id . "' AND note_text = 'This donor has no donations!' AND note_user = '0'");
+                            $find_no_donations_result = mysql_fetch_assoc($find_no_donations_note);
+
+                            if($find_no_donations_result) {
+                                mysql_query("DELETE FROM notes WHERE note_id = " . $find_no_donations_result['note_id']);
+                                echo "DELETE FROM notes WHERE note_id = " . $find_no_donations_result['note_id'];
+                            }
+
                             if (!$result) {
                                 $message  = 'Invalid query: ' . mysql_error() . "\n";
                                 $message .= 'Whole query: ' . $donation_query;
