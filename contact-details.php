@@ -37,6 +37,8 @@
 
         if ($is_pinned == true) {
             $pin = 1;
+        } else {
+            $pin = 0;
         }
 
         mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_pin, note_user) VALUES 
@@ -144,6 +146,9 @@
                             </a>
                         <?php } ?>
                     </h2>
+                    <?php if ($row_contact['contact_email']) { ?>
+                        <h3><a href="mailto:<?php echo $row_contact['contact_email']; ?>?subject=Thanks for donating to TechBridgeWorld!"><?php echo $row_contact['contact_email']; ?></a></h3>       
+                    <?php } ?>
                     <br clear="all" />
                 </div>
         
