@@ -72,8 +72,13 @@
     //PAGINATION
     $limit = "";
     $epp = 25;  //entries per page
-    record_set('results',"SELECT id FROM donations");
-    
+    if ($search == 1){
+        $end_date_string = "\"".$end_date ."\"";
+        $start_date_string = "\"".$start_date ."\"";
+        record_set('results',"SELECT id FROM donations where date_added between $start_date_string and $end_date_string");
+    } else {
+        record_set('results',"SELECT id FROM donations, contacts where donations.donor_id = contacts.contact_id");
+    }
     
     $entries_per_page = $epp;
     
@@ -87,7 +92,44 @@
     
     $limit = "LIMIT $offset, $entries_per_page";
     //
-    
+
+    function paginate_results($start, $end){
+        if ($totalRows_results > $epp) {
+            echo "<div class=\"pagination\">";
+
+            if ($page_number != 1) {
+                echo "<a href='results.php?page=$prev&search=1&start_date=" . $start . "&end_date=" . $end . "'>&laquo; Previous </a>";
+            }
+
+            if ($page_number == 1) {
+                echo "&laquo; Previous ";
+            }
+
+
+            $i = 1;
+            do {
+                if ($_GET['page'] != $i) {
+                    echo "<a href='results.php?page=$i&search=1&start_date=" . $start . "&end_date=" . $end . "'>&nbsp;$i&nbsp;</a>";
+                }
+
+                if ($_GET['page'] == $i) {
+                    echo "&nbsp;$i&nbsp;";
+                }
+
+
+                $i++;
+            } while ($i <= $total_pages);
+
+            if ($page_number != $total_pages) {
+                echo "<a href='results.php?page=$next&search=1&start_date=" . $start . "&end_date=" . $end . "'> Next &raquo;</a>";
+            }
+
+            if ($page_number == $total_pages) {
+                echo " Next &raquo;";
+            }    
+            echo "</div>";
+        }
+    }
     //get contacts
     if($search == 1){
         //record_set('contactlist',"SELECT * FROM donations where date_added between $start_date and $end_date $sorder $limit");
@@ -185,7 +227,41 @@
                         <input type="hidden" name="order" value='<?php echo $sorder ?>'>
                         <input type="submit" name="button" id="button" value="Export Results"/>
                     </form>
-                    <?php include('includes/pagination_contacts.php'); ?>
+                    <?php if ($search) { if ($totalRows_results > $epp) {
+            echo "<div class=\"pagination\">";
+
+            if ($page_number != 1) {
+                echo "<a href='results.php?page=$prev&search=1&start_date=" . $start_date . "&end_date=" . $end_date . "'>&laquo; Previous </a>";
+            }
+
+            if ($page_number == 1) {
+                echo "&laquo; Previous ";
+            }
+
+
+            $i = 1;
+            do {
+                if ($_GET['page'] != $i) {
+                    echo "<a href='results.php?page=$i&search=1&start_date=" . $start_date . "&end_date=" . $end_date . "'>&nbsp;$i&nbsp;</a>";
+                }
+
+                if ($_GET['page'] == $i) {
+                    echo "&nbsp;$i&nbsp;";
+                }
+
+
+                $i++;
+            } while ($i <= $total_pages);
+
+            if ($page_number != $total_pages) {
+                echo "<a href='results.php?page=$next&search=1&start_date=" . $start_date . "&end_date=" . $end_date . "'> Next &raquo;</a>";
+            }
+
+            if ($page_number == $total_pages) {
+                echo " Next &raquo;";
+            }    
+            echo "</div>";
+        }} ?>
                     
                 <?php } ?>
             </div>
