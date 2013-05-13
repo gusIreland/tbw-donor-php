@@ -27,10 +27,15 @@
     $query = "SELECT * FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user ORDER BY note_date DESC";
     $pinned_notes = mysql_query($query);    
     
-    //get contacts
+    //search results
     $climit = !empty($_GET['s']) ? 1000 : 10;
     record_set('contactlist',"SELECT * FROM history INNER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
     
+    if(isset($_GET['s']) && preg_match("/\d+/", $_GET['s'])) {
+        // echo "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= ".$_GET['s']." ORDER BY legal_amount DESC"
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= ".$_GET['s']." ORDER BY legal_amount DESC");
+    }
+
     if (!$totalRows_contactlist && !isset($_GET['s'])) { header('Location: contact.php'); }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -49,7 +54,25 @@
                     Search results for <em><?php echo $_GET['s']; ?></em>.<br />
                     <br />
                 <?php } ?>
-                    
+                   
+                <?php if ($totalRows_donationslist > 0) { ?>
+                    <h2>Donations</h2>
+                    <br />
+                    <?php $i = 1; do { 
+                    ?>
+                        <a href="contact-details.php?id=<?php echo $row_donationslist['contact_id']; ?>">
+                            <?php echo $row_donationslist['contact_first']; ?> <?php echo $row_donationslist['contact_last']; ?>
+                            - <?php echo $row_donationslist['legal_amount']; ?> for <?php echo $row_donationslist['alloc_short_name'] ?>
+                        </a>
+                        <br>
+                    <?php $i++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
+
+                    <?php if ($totalRows_donationslist > 10) { ?>
+                        <a href="donations.php">View all...</a>
+                    <?php } ?>
+                <?php } else { echo "There were no donation results"; } ?>
+                <br><br>
+
                 <?php if ($totalRows_contactlist > 0) { ?>
                     <h2>Donors</h2>
                     <br />
@@ -66,36 +89,40 @@
                     <?php if ($totalRows_contactlist > 10) { ?>
                         <a href="contacts.php">View all...</a>
                     <?php } ?>
-                    <br />
-                    <br />
-                    <hr />
-                    <br />
-                <?php } ?>
-        
-                <h2>Pinned Notes</h2>
+                <?php } else { echo "There were no donor results"; } ?>
                 <br />
+                <br />
+                <hr />
+                <br />
+
                 <?php 
-                if(mysql_num_rows($pinned_notes) == 0) {
-                    echo "There are no pinned notes!";
-                } else {
-                    $i = 1; 
-                    do { 
-                        if ($row_notes['note_pin'] == 1) { ?>
-                            <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
-                                <span class="datedisplay">
-                                    <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>&note=<?php echo $row_notes['note_id']; ?>">
-                                        <?php echo date('F d, Y', $row_notes['note_date']); ?>
-                                    </a>
-                                </span> for 
-                                <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>">
-                                        <?php echo $row_notes['contact_first']; ?> <?php echo $row_notes['contact_last']; ?>
-                                </a> - last updated by <?php echo $row_notes['user_email'] ?>
-                                <br />
-                                <?php echo $row_notes['note_text']; ?>
-                            </div>
-                            <?php if ($totalRows_notes!=$i) { echo "<hr />"; } ?>
-                        <?php } ?>
-                    <?php $i++;  } while ($row_notes = mysql_fetch_assoc($pinned_notes)); } ?>
+                    if(!$_GET['s']) { 
+                ?>
+                    <h2>Pinned Notes</h2>
+                    <br />
+                    <?php 
+                    if(mysql_num_rows($pinned_notes) == 0) {
+                        echo "There are no pinned notes!";
+                    } else {
+                        $i = 1; 
+                        do { 
+                            if ($row_notes['note_pin'] == 1) { ?>
+                                <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
+                                    <span class="datedisplay">
+                                        <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>&note=<?php echo $row_notes['note_id']; ?>">
+                                            <?php echo date('F d, Y', $row_notes['note_date']); ?>
+                                        </a>
+                                    </span> for 
+                                    <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>">
+                                            <?php echo $row_notes['contact_first']; ?> <?php echo $row_notes['contact_last']; ?>
+                                    </a> - last updated by <?php echo $row_notes['user_email'] ?>
+                                    <br />
+                                    <?php echo $row_notes['note_text']; ?>
+                                </div>
+                                <?php if ($totalRows_notes!=$i) { echo "<hr />"; } ?>
+                            <?php } ?>
+                        <?php $i++;  } while ($row_notes = mysql_fetch_assoc($pinned_notes)); } 
+                    } ?>
                 </div>
             <?php include('includes/right-column.php'); ?>
             <br clear="all" />
