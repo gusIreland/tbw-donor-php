@@ -22,24 +22,24 @@
         $nwhere = "WHERE note_text LIKE '%".addslashes($_GET['s'])."%' ";
     }
     
-//PAGINATION
-$limit = "";
-$epp = 25;  //entries per page
-
-record_set('results',"SELECT note_id FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user");
-
-$entries_per_page = $epp;
-
-$page_number = empty($_GET['page']) ? 1 : $_GET['page']; //current page
-
-$total_pages = ceil($totalRows_results / $entries_per_page); 
-$offset = ($page_number - 1) * $entries_per_page; 
-
-$prev = $page_number -1;
-$next = $page_number + 1;
-
-$limit = "LIMIT $offset, $entries_per_page";
-//
+    //PAGINATION
+    $limit = "";
+    $epp = 25;  //entries per page
+    
+    record_set('results',"SELECT note_id FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user");
+    
+    $entries_per_page = $epp;
+    
+    $page_number = empty($_GET['page']) ? 1 : $_GET['page']; //current page
+    
+    $total_pages = ceil($totalRows_results / $entries_per_page); 
+    $offset = ($page_number - 1) * $entries_per_page; 
+    
+    $prev = $page_number -1;
+    $next = $page_number + 1;
+    
+    $limit = "LIMIT $offset, $entries_per_page";
+    //
 
     //get notes
     // record_set('notes',"SELECT * FROM notes INNER JOIN contacts ON note_contact = contact_id $nwhere ORDER BY note_date DESC LIMIT 0, 20");
@@ -49,13 +49,26 @@ $limit = "LIMIT $offset, $entries_per_page";
     //search results
     $climit = !empty($_GET['s']) ? 1000 : 10;
     record_set('contactlist',"SELECT * FROM history RIGHT OUTER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
-    
-    if(isset($_GET['s']) && preg_match("/\d+/", $_GET['s'])) {
-        // echo "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= ".$_GET['s']." ORDER BY legal_amount DESC"
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= ".$_GET['s']." ORDER BY legal_amount DESC");
+
+    if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
     }
 
-    if (!$totalRows_contactlist && !isset($_GET['s'])) { header('Location: contact.php'); }
+    elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^>\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^<=\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+    }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -93,10 +106,11 @@ $limit = "LIMIT $offset, $entries_per_page";
                     if($_GET['s'])
                         echo "There were no donation results"; 
                 } ?>
+
                 <br><br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>
-                    <h2>Donors</h2>
+                    <h2>Recently Viewed Donors</h2>
                     <br />
                     <?php $i = 1; do { 
                         $comma = "";
@@ -111,7 +125,10 @@ $limit = "LIMIT $offset, $entries_per_page";
                     <?php if ($totalRows_contactlist > 10) { ?>
                         <a href="contacts.php">View all...</a>
                     <?php } ?>
-                <?php } else { echo "There were no donor results"; } ?>
+                <?php } else { 
+                                if($_GET['s'])
+                                    echo "There were no donor results"; 
+                            } ?>
                 <br />
                 <br />
                 <hr />
