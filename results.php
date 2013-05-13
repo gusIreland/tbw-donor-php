@@ -106,8 +106,8 @@
     //   $result = record_set('csv',$stripped_query); 
     // }
  ?>
- <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
- <html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
         <title><?php echo $pagetitle; ?>s</title>
@@ -120,83 +120,74 @@
         <link href="includes/simplecustomer.css" rel="stylesheet" type="text/css" />
     </head>
 
-<body>
-  <?php include('includes/header.php');
-  ?>
-  <div class="container">
-    <div class="leftcolumn">
-      <h2>Donations</h2>
-
-
-<?php if (!$totalRows_contact_list) { ?>
-<br />
-Your search returned no donations between <?php echo date('F d Y', strtotime($start_date)); ?> and <?php echo date('F d Y', strtotime($end_date)); ?>.
-<br />
-<br />
-<strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donations </strong><br />
-<br />
-<?php } ?>
-
-<?php if ($totalRows_contact_list) { ?>
-<form id="form1" name="form1" method="post" action="">
-    <table width="100%" border="0" cellspacing="0" cellpadding="0">
-        <tr>
-            <td colspan="4" align="right"></td>
-        </tr>
-        <tr>
-            <td colspan="4"><?php display_msg(); ?></td>
-        </tr>
-        <tr>
-            <th width="25%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Donor Name</a></th>
-            <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Campaign </a></th>
-            <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Donation Amount</a></th>
-            <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Date of Donation</a></th>
-            <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $matching_company; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Matching Company</a></th>             
-            <th width="7%">&nbsp;</th>
-        </tr>
+    <body>
+        <?php include('includes/header.php'); ?>
+        <div class="container">
+            <div class="leftcolumn">
+                <h2>Donations</h2>
+                <?php if (!$totalRows_contact_list) { ?>
+                    <br />
+                    Your search returned no donations between <?php echo date('F d Y', strtotime($start_date)); ?> and <?php echo date('F d Y', strtotime($end_date)); ?>.
+                    <br />
+                    <br />
+                    <strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donations </strong><br />
+                    <br />
+                <?php } ?>
+                
+                <?php if ($totalRows_contact_list) { ?>
+                    <form id="form1" name="form1" method="post" action="">
+                        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td colspan="4" align="right"></td>
+                            </tr>
+                            <tr>
+                                <td colspan="4"><?php display_msg(); ?></td>
+                            </tr>
+                            <tr>
+                                <th width="25%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Donor Name</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Campaign </a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Donation Amount</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Date of Donation</a></th>
+                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $matching_company; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Matching Company</a></th>             
+                                <th width="7%">&nbsp;</th>
+                            </tr>
+                        
+                            <?php $row_count = 1; do {  ?>
+                                <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
+                                    <td style="padding-left:5px">
+                                        <a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>">
+                                            <?php echo $row_contact_list['contact_first']; ?>
+                                        </a>
+                                    </td>
+                                    <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['alloc_short_name'] : $na; ?></td>
+                                    <td><?php echo $row_contact_list['legal_amount'];?></td>
+                                    <td><?php echo $row_contact_list['date_added']; ?></td>
+                                    <td><?php echo $row_contact_list['match_company_name']; ?></td>
+                                    <td>
+                                        <a href="delete.php?donation=<?php echo $row_contact_list['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a>
+                                    </td>            
+                                </tr>
+                            <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
+                        </table>
+                    </form>
     
-        <?php $row_count = 1; do {  ?>
-            <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-                <td style="padding-left:5px">
-                    <a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>">
-                        <?php echo $row_contact_list['contact_first']; ?>
-                    </a>
-                </td>
-                <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['alloc_short_name'] : $na; ?></td>
-                <td><?php echo $row_contact_list['legal_amount'];?></td>
-                <td><?php echo $row_contact_list['date_added']; ?></td>
-                <td><?php echo $row_contact_list['match_company_name']; ?></td>
-                <td>
-                    <a href="delete.php?donation=<?php echo $row_contact_list['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a>
-                </td>            
-            </tr>
-        <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
-    </table>
-  </form>
-  <?php echo $query ?>
-  <form action="csvR.php" method="post">
-    <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
-    <input type="hidden" name="start_date" value='<?php echo $start_date_string ?>'>
-    <input type="hidden" name="end_date" value='<?php echo $end_date_string ?>'>
-    <input type="hidden" name="offset" value='<?php echo $offset ?>'>
-    <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
-    <input type="hidden" name="order" value='<?php echo $sorder ?>'>
-    <input type="submit" name="button" id="button" value="Export Results"/>
-  </form>
-  <?php
-  include('includes/pagination_contacts.php');
-  ?>
-
-  <?php } ?>
-
-
-
-</div>
-<?php include('includes/right-column.php'); ?>
-<br clear="all" />
-</div>
-
-<?php include('includes/footer.php'); ?>
-
-</body>
+                    <?php echo $query ?>
+                    <form action="csvR.php" method="post">
+                        <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
+                        <input type="hidden" name="start_date" value='<?php echo $start_date_string ?>'>
+                        <input type="hidden" name="end_date" value='<?php echo $end_date_string ?>'>
+                        <input type="hidden" name="offset" value='<?php echo $offset ?>'>
+                        <input type="hidden" name="pp" value='<?php echo $entries_per_page ?>'>
+                        <input type="hidden" name="order" value='<?php echo $sorder ?>'>
+                        <input type="submit" name="button" id="button" value="Export Results"/>
+                    </form>
+                    <?php include('includes/pagination_contacts.php'); ?>
+                    
+                <?php } ?>
+            </div>
+            <?php include('includes/right-column.php'); ?>
+            <br clear="all" />
+        </div>
+        <?php include('includes/footer.php'); ?>    
+    </body>
 </html>
