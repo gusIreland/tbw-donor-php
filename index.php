@@ -162,9 +162,9 @@
                             <?php } ?>
                             
                         <?php $i++;  } while ($row_notes = mysql_fetch_assoc($pinned_notes)); } 
-                    } ?><?php
                               include('includes/pagination_index.php');
-                            ?>
+                      } ?>
+
                 </div>
             <?php include('includes/right-column.php'); ?>
             <br clear="all" />
