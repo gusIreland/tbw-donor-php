@@ -70,7 +70,10 @@
                     <?php if ($totalRows_donationslist > 10) { ?>
                         <a href="donations.php">View all...</a>
                     <?php } ?>
-                <?php } else { echo "There were no donation results"; } ?>
+                <?php } else { 
+                    if($_GET['s'])
+                        echo "There were no donation results"; 
+                } ?>
                 <br><br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>

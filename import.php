@@ -177,7 +177,7 @@
                                                '".addslashes(ltrim(rtrim($donor_id)))."');";
                             $result = mysql_query($donation_query);
 
-                            $find_no_donations_note = mysql_query("SELECT * FROM notes WHERE note_contact = '" . $donor_id . "' AND note_text = 'This donor has no donations!' AND note_user = '0'");
+                            $find_no_donations_note = mysql_query("SELECT * FROM notes WHERE note_contact = '" . $donor_id . "' AND note_text = 'This donor has no donations!'");
                             $find_no_donations_result = mysql_fetch_assoc($find_no_donations_note);
 
                             if($find_no_donations_result) {
