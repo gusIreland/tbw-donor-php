@@ -241,7 +241,7 @@
                         <td colspan="2">&nbsp;</td>
                     </tr>
                     <tr>
-                        <td colspan="2"><a href="csv.php"><strong>+ Export Contacts</strong></a></td>
+                        <td colspan="2"><a href="csv.php"><strong>+ Export Donors</strong></a></td>
                     </tr>
                 </table>    
             <p>&nbsp;</p>

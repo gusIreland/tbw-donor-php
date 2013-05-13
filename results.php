@@ -143,6 +143,9 @@
                             <tr>
                                 <td colspan="4"><?php display_msg(); ?></td>
                             </tr>
+                            <p style="padding-left:5px">
+                                Between <?php echo date('F d Y', strtotime($start_date)); ?> and <?php echo date('F d Y', strtotime($end_date)); ?>
+                            </p>
                             <tr>
                                 <th width="25%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Donor Name</a></th>
                                 <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>&search=<?php echo $search; ?>&end_date=<?php echo $end_date; ?>&start_date=<?php echo $start_date; ?>">Campaign </a></th>
@@ -170,8 +173,7 @@
                             <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
                         </table>
                     </form>
-    
-                    <?php echo $query ?>
+                    <br />
                     <form action="csvR.php" method="post">
                         <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
                         <input type="hidden" name="start_date" value='<?php echo $start_date_string ?>'>
