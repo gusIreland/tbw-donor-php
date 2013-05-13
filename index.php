@@ -12,7 +12,7 @@
     
     $cwhere = "WHERE history_status = 1";
     if (isset($_GET['s'])) {
-        $cwhere = "WHERE history_status = 1 AND ($like_where)";
+        $cwhere = "WHERE (history_status = 1 OR history_status IS NULL) AND ($like_where)";
     }
     
     $search = 0;
@@ -22,14 +22,33 @@
         $nwhere = "WHERE note_text LIKE '%".addslashes($_GET['s'])."%' ";
     }
     
+//PAGINATION
+$limit = "";
+$epp = 25;  //entries per page
+
+record_set('results',"SELECT note_id FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user");
+
+$entries_per_page = $epp;
+
+$page_number = empty($_GET['page']) ? 1 : $_GET['page']; //current page
+
+$total_pages = ceil($totalRows_results / $entries_per_page); 
+$offset = ($page_number - 1) * $entries_per_page; 
+
+$prev = $page_number -1;
+$next = $page_number + 1;
+
+$limit = "LIMIT $offset, $entries_per_page";
+//
+
     //get notes
     // record_set('notes',"SELECT * FROM notes INNER JOIN contacts ON note_contact = contact_id $nwhere ORDER BY note_date DESC LIMIT 0, 20");
-    $query = "SELECT * FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user ORDER BY note_date DESC";
+    $query = "SELECT * FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user ORDER BY note_date DESC $limit";
     $pinned_notes = mysql_query($query);    
     
     //search results
     $climit = !empty($_GET['s']) ? 1000 : 10;
-    record_set('contactlist',"SELECT * FROM history INNER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
+    record_set('contactlist',"SELECT * FROM history RIGHT OUTER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
     
     if(isset($_GET['s']) && preg_match("/\d+/", $_GET['s'])) {
         // echo "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= ".$_GET['s']." ORDER BY legal_amount DESC"
@@ -110,7 +129,7 @@
                                 <div <?php if ($row_notes['note_date'] > time()-1) { ?>id="newnote"<?php } ?>>
                                     <span class="datedisplay">
                                         <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>&note=<?php echo $row_notes['note_id']; ?>">
-                                            <?php echo date('F d, Y', $row_notes['note_date']); ?>
+                                            <?php echo date('F d, Y \a\t g:h:s A', $row_notes['note_date']); ?>
                                         </a>
                                     </span> for 
                                     <a href="contact-details.php?id=<?php echo $row_notes['note_contact']; ?>">
@@ -121,8 +140,11 @@
                                 </div>
                                 <?php if ($totalRows_notes!=$i) { echo "<hr />"; } ?>
                             <?php } ?>
+                            
                         <?php $i++;  } while ($row_notes = mysql_fetch_assoc($pinned_notes)); } 
-                    } ?>
+                    } ?><?php
+                              include('includes/pagination_index.php');
+                            ?>
                 </div>
             <?php include('includes/right-column.php'); ?>
             <br clear="all" />
