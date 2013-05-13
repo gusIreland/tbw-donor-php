@@ -44,7 +44,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-<title>Custom Fields</title>
+<title>Additional Donor Information</title>
 <script src="includes/lib/prototype.js" type="text/javascript"></script>
 <script src="includes/src/effects.js" type="text/javascript"></script>
 <script src="includes/validation.js" type="text/javascript"></script>
@@ -56,7 +56,7 @@
 <?php include('includes/header.php'); ?>
 <div class="container">
   <div class="leftcolumn">
-    <h2>Custom Fields </h2>
+    <h2>Additional Donor Information</h2>
     <?php display_msg(); ?>    
 
 

@@ -18,7 +18,6 @@
     
     //get donations list
     record_set('donationlist',$query);
-    echo $row_donationlist;
     // create the headers
     $csv_fields = array();
     // $csv_fields[0] = 'id';
