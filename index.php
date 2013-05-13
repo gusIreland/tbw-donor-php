@@ -68,9 +68,9 @@
     //PAGINATION
     $limit = "";
     $epp = 25;  //entries per page
-    
-    record_set('results',"SELECT note_id FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user");
-    
+
+     record_set('results',"SELECT note_id FROM notes, contacts, users WHERE note_pin = 1 AND contacts.contact_id = notes.note_contact AND users.user_id = notes.note_user");
+
     $entries_per_page = $epp;
     
     $page_number = empty($_GET['page']) ? 1 : $_GET['page']; //current page
@@ -82,6 +82,44 @@
     $next = $page_number + 1;
     
     $limit = "LIMIT $offset, $entries_per_page";
+
+
+    if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
+        record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
+        
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
+        record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^>\d+$/", $_GET['s'])) {
+        record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^<=\d+$/", $_GET['s'])) {
+        record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+        
+    }
+
+    elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
+        record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+    }
+
+    $entries_per_page = $epp;
+    
+    $page_number_donations = empty($_GET['page_donations']) ? 1 : $_GET['page_donations']; //current page
+    
+    $total_pages_donations = ceil($totalRows_results_donations / $entries_per_page); 
+    $offset_donations = ($page_number_donations - 1) * $entries_per_page; 
+    
+    $prev_donations = $page_number_donations -1;
+    $next_donations = $page_number_donations + 1;
+    
+    $limit_donations = "LIMIT $offset_donations, $entries_per_page";
+    
     //
 
     //get notes
@@ -95,29 +133,27 @@
 
     $comparison = '';
     if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
-        echo "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC";
-        exit;
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<=\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 ?>
@@ -172,6 +208,41 @@
                             <?php $row_count++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
                         </table>
                     </form>
+            <?php if ($search) { if ($totalRows_results_donations > $epp) {
+            echo "<div class=\"pagination\">";
+
+            if ($page_number_donations != 1) {
+                echo "<a href='index.php?s=$comparison&search=1&page_donations=$prev_donations'>&laquo; Previous </a>";
+            }
+
+            if ($page_number_donations == 1) {
+                echo "&laquo; Previous ";
+            }
+
+
+            $i = 1;
+            do {
+                if ($_GET['page_donations'] != $i) {
+                    echo "<a href='index.php?s=$comparison&search=1&page_donations=$i'>&nbsp;$i&nbsp;</a>";
+                }
+
+                if ($_GET['page_donations'] == $i) {
+                    echo "&nbsp;$i&nbsp;";
+                }
+
+
+                $i++;
+            } while ($i <= $total_pages_donations);
+
+            if ($page_number_donations != $total_pages_donations) {
+                echo "<a href='index.php?s=$comparison&search=1&page_donations=$next_donations&'> Next &raquo;</a>";
+            }
+
+            if ($page_number_donations == $total_pages_donations) {
+                echo " Next &raquo;";
+            }    
+            echo "</div>";
+        }} ?>
                     <br>
                     <form action="csvR.php" method="post">
                         <input type="hidden" name="comparison_string" value='<?php echo addslashes($comparison); ?>'>
