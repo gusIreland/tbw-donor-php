@@ -97,7 +97,7 @@
                     No donations have been added yet.
                     <br />
                     <br />
-                    <strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donations </strong><br />
+                    <strong><a href="import.php">Import</a> Donations </strong><br />
                     <br />
                 <?php } ?>
                 

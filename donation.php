@@ -195,7 +195,7 @@ function showState(d) {
 <?php include('includes/header.php'); ?>
 <div class="container">
   <div class="leftcolumn">
-    <h2><?php if ($update==1) { echo 'Update'; } else { echo 'Add'; } ?> Donor </h2>
+    <h2><?php if ($update==1) { echo 'Update'; } else { echo 'Add'; } ?> Donation </h2>
     <p>&nbsp;</p>
     <form action="" method="POST" enctype="multipart/form-data" name="form1" id="form1">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
