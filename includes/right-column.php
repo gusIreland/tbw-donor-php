@@ -39,7 +39,9 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
     <input name="s" type="text" id="s" onfocus="MM_setTextOfTextfield('s','','')" value="Search" size="15" />
     <input type="submit" name="Submit_search" value="Go" />
   </form>
+  <span id="search_instructions">You can search for donors, notes, extra fields, and amounts (100, &gt;100, &lt;=100, etc.)
   <br />
+  <br>
   <p><p style="margin-bottom:-10px"><strong >Search donations within a range:</strong></p><br />
   <form action="results.php" method="post">
     
