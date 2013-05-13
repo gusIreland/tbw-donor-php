@@ -161,6 +161,7 @@
                                     <td style="padding-left:5px">
                                         <a href="contact-details.php?id=<?php echo $row_contact_list['donor_id']; ?>">
                                             <?php echo $row_contact_list['contact_first']; ?>
+                                            <?php echo $row_contact_list['contact_last']; ?>
                                         </a>
                                     </td>
                                     <td><?php echo $row_contact_list['receipt_number'] ? $row_contact_list['alloc_short_name'] : $na; ?></td>
