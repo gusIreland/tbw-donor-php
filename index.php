@@ -69,7 +69,6 @@
     elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
         record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC");
     }
-    if (!$totalRows_contactlist && !isset($_GET['s'])) { header('Location: contact.php'); }
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -107,10 +106,11 @@
                     if($_GET['s'])
                         echo "There were no donation results"; 
                 } ?>
+
                 <br><br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>
-                    <h2>Donors</h2>
+                    <h2>Recently Viewed Donors</h2>
                     <br />
                     <?php $i = 1; do { 
                         $comma = "";
@@ -125,7 +125,10 @@
                     <?php if ($totalRows_contactlist > 10) { ?>
                         <a href="contacts.php">View all...</a>
                     <?php } ?>
-                <?php } else { echo "There were no donor results"; } ?>
+                <?php } else { 
+                                if($_GET['s'])
+                                    echo "There were no donor results"; 
+                            } ?>
                 <br />
                 <br />
                 <hr />
