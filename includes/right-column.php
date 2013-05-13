@@ -106,7 +106,7 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
       <?php } ?>
 
       <?php if ($row_contact['contact_email']) { ?>
-      <a href="mailto:<?php echo $row_contact['contact_email']; ?>"><?php echo $row_contact['contact_email']; ?></a>        
+      <a href="mailto:<?php echo $row_contact['contact_email']; ?>?subject=Thanks for donating to TechBridgeWorld!"><?php echo $row_contact['contact_email']; ?></a>        
       <?php } ?>
 
     </p><hr />

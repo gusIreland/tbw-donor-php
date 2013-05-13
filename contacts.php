@@ -105,7 +105,7 @@ No donors have been added yet.
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
           <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
-          <td><a href="mailto:<?php echo $row_contactlist['contact_email']; ?>"><?php echo $row_contactlist['contact_email']; ?></a></td>
+          <td><a href="mailto:<?php echo $row_contactlist['contact_email']; ?>?subject=Thanks for donating to TechBridgeWorld!"><?php echo $row_contactlist['contact_email']; ?></a></td>
           <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
         </tr>
         <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
