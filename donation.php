@@ -1,4 +1,4 @@
-c<?php require_once('includes/config.php');
+<?php require_once('includes/config.php');
 include('includes/sc-includes.php');
 $pagetitle = 'donation';
 
