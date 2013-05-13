@@ -154,7 +154,6 @@ No contacts have been added yet.
       <?php $row_count++; } while ($row_contact_list = mysql_fetch_assoc($contact_list)); ?>
     </table>
   </form>
-  <?php echo $query ?>
   <form action="csvR.php" method="post">
     <!-- <input type="hidden" name="query" value='<?php echo $query ?>'> -->
     <input type="hidden" name="start_date" value='<?php echo $startDateString ?>'>
