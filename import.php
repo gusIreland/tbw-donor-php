@@ -30,7 +30,7 @@
 
     function duplicate_donation($data) {
         $recipt_number = $data[11];
-        $receipt_number_query = "SELECT * FROM donations WHERE receipt_number = '". $recipt_number . "'";
+        $receipt_number_query = "SELECT * FROM donations WHERE receipt_number = '". $recipt_number . "' AND match_company_name = '" . $data[17] . "'";
         $result_receipt_number = mysql_query($receipt_number_query);
         return (mysql_num_rows($result_receipt_number) > 0);
     }
@@ -46,17 +46,10 @@
 
         if ($donors_result) {
             while($row = mysql_fetch_assoc($donors_result)) {
-                $possible_match = $row['contact_first'] . " " . $row['contact_last'];
-                echo $possible_match;
-                echo "<br>";
-                echo $name_to_match;
-                echo "<br>";
+                $possible_match = ltrim($row['contact_first']) . " " . $row['contact_last'];
                 if(strpos($name_to_match, $possible_match) > -1) {
                     $donor_id = $row['contact_id'];
-                    echo $donor_id;
-                    echo "<br>";
                 }
-                echo "<br>";
             }
         }
         return $donor_id;
@@ -92,9 +85,9 @@
                     if(!duplicate_donor($data)) {
                         $donor_insert_query = mysql_query("INSERT INTO contacts (contact_first, contact_last, contact_email) VALUES
                         (
-                             '".addslashes($data[2])."',
-                             '".addslashes($data[3])."',
-                             '".addslashes($data[4])."'
+                             '".addslashes(ltrim(rtrim($data[2])))."',
+                             '".addslashes(ltrim(rtrim($data[3])))."',
+                             '".addslashes(ltrim(rtrim($data[4])))."'
                         )");
     
                         if(!$donor_insert_query){
@@ -112,19 +105,19 @@
                                     (
                                         '".$donor_id."',
                                         '".$anonymous_field['field_id']."',
-                                        '".addslashes($data[5])."'
+                                        '".addslashes(ltrim(rtrim($data[5])))."'
                                     )");
     
                         $cf_query = mysql_query("INSERT INTO fields_assoc (cfield_contact, cfield_field, cfield_value) VALUES
                                     (
                                         '".$donor_id."',
                                         '".$contact_field['field_id']."',
-                                        '".addslashes($data[6])."'
+                                        '".addslashes(ltrim(rtrim($data[6])))."'
                                     )");
 
                         if($data[7]){
                             $note_insert_query = mysql_query("INSERT INTO notes (note_contact, note_text, note_date, note_status, note_user)
-                                                              VALUES ('" . $donor_id . "', '" . addslashes($data[7]) . "', '" . time() . "', '1', '0')");
+                                                              VALUES ('" . $donor_id . "', '" . addslashes(ltrim(rtrim($data[7]))) . "', '" . time() . "', '1', '0')");
     
                             if(!$note_insert_query){
                                 $message  = 'Invalid query: ' . mysql_error() . "\n";
@@ -154,34 +147,30 @@
                     //     $message .= 'Whole query: ' . $donor_query;
                     //     die($message);
                     // }
-                    
-                    echo "<br><br><br>";
-                
                     if(!(duplicate_donation($data))) {
                         $donor_id = find_donor($data);
-                        if($donor_id != -1) {
-                            echo $donor_id;                       
+                        if($donor_id != -1) {                      
                 
-                            $php_dt_date_record = strtotime($data[4]);
+                            $php_dt_date_record = strtotime(ltrim(rtrim($data[4])));
                             $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
                             
-                            $php_date_added = strtotime($data[5]);
+                            $php_date_added = strtotime(ltrim(rtrim($data[5])));
                             $mysql_added = date('Y-m-d H:i:s', $php_date_added);
                             
                             $donation_query = "INSERT INTO donations
                                                VALUES ('', 
-                                               '".addslashes($data[0])."', 
+                                               '".addslashes(ltrim(rtrim($data[0])))."', 
                                                '".$mysql_dt_date_record."', 
                                                '".$mysql_added."',
-                                               '".addslashes($data[6])."',
-                                               '".addslashes($data[7])."',
-                                               '".addslashes($data[8])."',
-                                               '".addslashes($data[9])."',
-                                               '".addslashes($data[10])."',
-                                               '".addslashes($data[11])."',
-                                               '".addslashes($data[16])."', 
-                                               '".addslashes($data[17])."',
-                                               '".addslashes($donor_id)."');";
+                                               '".addslashes(ltrim(rtrim($data[6])))."',
+                                               '".addslashes(ltrim(rtrim($data[7])))."',
+                                               '".addslashes(ltrim(rtrim($data[8])))."',
+                                               '".addslashes(ltrim(rtrim($data[9])))."',
+                                               '".addslashes(ltrim(rtrim($data[10])))."',
+                                               '".addslashes(ltrim(rtrim($data[11])))."',
+                                               '".addslashes(ltrim(rtrim($data[16])))."', 
+                                               '".addslashes(ltrim(rtrim($data[17])))."',
+                                               '".addslashes(ltrim(rtrim($donor_id)))."');";
                             $result = mysql_query($donation_query);
                     
                             if (!$result) {

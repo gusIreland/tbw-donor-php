@@ -212,7 +212,6 @@
                 <br>
                 
                 <?php if ($update) { ?>
-
                     <a href="delete.php?note=<?php echo $row_note['note_id']; ?>&amp;id=<?php echo $row_note['note_contact']; ?>" onclick="javascript:return confirm('Are you sure you want to delete this note?')">Delete Note</a>
                 <?php } else { ?>
 
