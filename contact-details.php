@@ -161,6 +161,7 @@
         
                         if(mysql_num_rows($result_donations) == 0){
                             echo "This donor does not have any donations!<br><br>";
+                            
                         }
         
                         else{
@@ -188,6 +189,7 @@
                                 echo "<td>" . $row['legal_amount'] . "</td>";
                                 echo "<td>" . (strftime("%m/%d/%Y", strtotime($row['dt_date_record']))) . "</td>";
                                 echo "<td>" . $row['match_company_name'] . "</td>";
+                                echo "<td><a href=\"donation.php?id=".$row['id'] ."\">Edit</a></td>";
                                 echo "<td><a href=\"delete.php?donation=". $row['id'] . "&redirect=contact-details.php?id=".$_GET['id']."\" onclick=\"javascript:return confirm('Are you sure?')\">Delete</a></td>";
                                 echo "</tr >";
                                 $counter = $counter + 1;

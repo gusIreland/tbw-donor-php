@@ -97,7 +97,7 @@
                     No donations have been added yet.
                     <br />
                     <br />
-                    <strong><a href="contact.php">Add</a> or <a href="import.php">Import</a> Donations </strong><br />
+                    <strong><a href="import.php">Import</a> Donations </strong><br />
                     <br />
                 <?php } ?>
                 
@@ -126,7 +126,7 @@
                                     <td style="padding-left:5px">
                                         <a href="contact-details.php?id=<?php echo $row_contactlist['donor_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
                                     <td><?php echo $row_contactlist['receipt_number'] ? $row_contactlist['alloc_short_name'] : $na; ?></td>
-                                    <td><?php echo $row_contactlist['legal_amount'];?></td>
+                                    <td><?php if ($user_admin) echo "$". $row_contactlist['legal_amount']; ?></td>
                                     <td><?php echo $row_contactlist['date_added']; ?></td>
                                     <td><?php echo $row_contactlist['match_company_name']; ?></td>
                                     <td><a href="delete.php?donation=<?php echo $row_contactlist['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>

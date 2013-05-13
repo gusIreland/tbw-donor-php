@@ -42,13 +42,16 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
   <br />
   <p><p style="margin-bottom:-10px"><strong >Search donations within a range:</strong></p><br />
   <form action="results.php" method="post">
+    
     <div style="float: left; padding-right: 3px; line-height: 18px;">From:</div>
     <?php
+    
 //get class into the page
     require_once('includes/calendar/classes/tc_calendar.php');
 //instantiate class and set properties
-    $date3_default = "1990-01-01";
+    $date3_default = "2002-01-01";
     $date4_default = "2020-01-01";
+    $date4_default = date("Y-m-d");
 
     $myCalendar = new tc_calendar("dateStart", true, false);
     $myCalendar->setIcon("includes/calendar/images/iconCalendar.gif");
@@ -83,7 +86,6 @@ function MM_setTextOfTextfield(objName,x,newText) { //v3.0
   <p>
     <a class="addcontact"></a>
     <a class="addcontact" href="contact.php" <?php if ($pagetitle == 'ContactDetails') { ?>style="border-bottom:0px"<?php } ?>>Add Donor</a>  
-
     <?php if ($user_admin && $pagetitle != 'ContactDetails') { ?>
     <a class="addcontact" href="import.php">Import/Export </a>
     <a class="addcontact" href="fields.php" style="border-bottom:0px">Add Additional Donor Info</a>
