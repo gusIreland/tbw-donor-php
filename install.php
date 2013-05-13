@@ -109,8 +109,15 @@
                     
                     $password = trim(addslashes($_POST['password']));
                     $password_hashed = hash("sha256", $password);
-                    
-                    mysql_query("INSERT INTO `users` (`user_id`, `user_level`, `user_email`, `user_password`, `user_date`, `user_home`) VALUES (1, 1, '".trim($_POST['email'])."', '".$password_hashed."', NULL, 'index.php')");
+
+                    // create SYSTEM account and first user account
+                    mysql_query("INSERT INTO `users` (`user_id`, `user_level`, `user_email`, `user_password`, `user_date`, `user_home`) VALUES 
+                      (0, 0, 'SYSTEM', '6c1e3ae69364dd246806cc9620ec591ffca12f653bf36b1269a793b1fa0d2080', NULL, 'index.php'),
+                      (2, 1, '".trim($_POST['email'])."', '".$password_hashed."', NULL, 'index.php')");
+
+                    // update user ids
+                    mysql_query("UPDATE users SET user_id = 0 WHERE user_id = 1");
+                    mysql_query("UPDATE users SET user_id = 1 WHERE user_id = 2");
                     
                     mysql_query("CREATE TABLE `history` (
                       `history_id` int(11) NOT NULL auto_increment,
@@ -130,7 +137,8 @@
                       `note_text` text,
                       `note_date` varchar(10) default NULL,
                       `note_status` int(11) default NULL,
-                      `note_user` int(11) default NULL,
+                      `note_user` int(11) default 0,
+                      `note_pin` int(11) default 0,
                       PRIMARY KEY  (`note_id`)
                     ) TYPE=MyISAM");
                     
