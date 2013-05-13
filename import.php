@@ -153,7 +153,29 @@
                     // }
                     if(!(duplicate_donation($data))) {
                         $donor_id = find_donor($data);
-                        if($donor_id != -1) {                      
+                        if($donor_id != -1) {
+
+                            $get_donor_information = mysql_query("SELECT * FROM contacts WHERE contact_id = '" . $donor_id . "'");
+                            $donor_information = mysql_fetch_assoc($get_donor_information);
+                            // var_dump($donor_information);
+
+                            if(!$donor_information['contact_email']) {
+                                mysql_query("UPDATE contacts SET contact_email = " . addslashes($data[15]) . " WHERE contact_id = '" . $donor_id . "'");
+                            }
+
+                            if(!$donor_information['contact_street']) {
+                                mysql_query("UPDATE contacts SET contact_street = '" .addslashes($data[3]). "' WHERE contact_id = '" . $donor_id . "'");
+                            }    
+
+                            if(!$donor_information['contact_city']) {
+                                mysql_query("UPDATE contacts SET contact_city = '" .addslashes($data[12]). "' WHERE contact_id = '" . $donor_id . "'");
+                            }    
+
+                            if(!$donor_information['contact_state']) {
+                                mysql_query("UPDATE contacts SET contact_state = '" .addslashes($data[13]). "' WHERE contact_id = '" . $donor_id . "'");
+                            }           
+
+
                 
                             $php_dt_date_record = strtotime(ltrim(rtrim($data[4])));
                             $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
