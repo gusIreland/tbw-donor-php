@@ -34,4 +34,10 @@
         redirect('Field Deleted',$redirect);
     }
     //
+
+    if (isset($_GET['user'])) {
+        mysql_query("DELETE FROM users WHERE user_id = ".$_GET['user']."");
+        $redirect = "users.php";
+        redirect('User Deleted',$redirect);
+    }
 ?>

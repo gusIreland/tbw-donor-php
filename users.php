@@ -130,6 +130,7 @@
         <br />
         <input name="user_email" type="text" id="user_email" value="<?php echo $row_userp['user_email']; ?>" class="required validate-email" size="35" />
       </p>
+      
       <p><br />
         Password (leave blank to keep current password) <br />
         <input name="password" type="password" id="password" />
