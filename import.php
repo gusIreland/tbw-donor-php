@@ -61,6 +61,8 @@
         $cf = array();
         
         $csv_type = "donation";
+        $duplicate_donations_array = array();
+        $failed_imports = array();
 
         while ($data = fgetcsv($handle, 1000, ",")) {
             //custom field array
@@ -134,31 +136,14 @@
                 
                 // we imported a donor spreadsheet
                 else {
-                    // $donor_query = "INSERT INTO contacts (contact_first, contact_street, contact_city, contact_state, contact_country, contact_email) VALUES
-                    // (
-                    //      '".addslashes($data[1])."',
-                    //      '".addslashes($data[3])."',
-                    //      '".addslashes($data[12])."',
-                    //      '".addslashes($data[13])."',
-                    //      '".addslashes($data[14])."',
-                    //      '".addslashes($data[15])."'
-                    // )";
-        
-                    // $result =  mysql_query($donor_query);
-            
-                    // if(!$result){
-                    //     $message  = 'Invalid query: ' . mysql_error() . "\n";
-                    //     $message .= 'Whole query: ' . $donor_query;
-                    //     die($message);
-                    // }
                     if(!(duplicate_donation($data))) {
                         $donor_id = find_donor($data);
                         if($donor_id != -1) {
 
                             $get_donor_information = mysql_query("SELECT * FROM contacts WHERE contact_id = '" . $donor_id . "'");
                             $donor_information = mysql_fetch_assoc($get_donor_information);
-                            // var_dump($donor_information);
 
+                            // pull in the latest email, address, city, and state from the CMU spreadsheet
                             if(!$donor_information['contact_email']) {
                                 mysql_query("UPDATE contacts SET contact_email = " . addslashes($data[15]) . " WHERE contact_id = '" . $donor_id . "'");
                             }
@@ -175,14 +160,14 @@
                                 mysql_query("UPDATE contacts SET contact_state = '" .addslashes($data[13]). "' WHERE contact_id = '" . $donor_id . "'");
                             }           
 
-
-                
+                            // format the dates
                             $php_dt_date_record = strtotime(ltrim(rtrim($data[4])));
                             $mysql_dt_date_record = date('Y-m-d H:i:s', $php_dt_date_record);
                             
                             $php_date_added = strtotime(ltrim(rtrim($data[5])));
                             $mysql_added = date('Y-m-d H:i:s', $php_date_added);
                             
+                            // insert the donation
                             $donation_query = "INSERT INTO donations
                                                VALUES ('', 
                                                '".addslashes(ltrim(rtrim($data[0])))."', 
@@ -197,27 +182,34 @@
                                                '".addslashes(ltrim(rtrim($data[16])))."', 
                                                '".addslashes(ltrim(rtrim($data[17])))."',
                                                '".addslashes(ltrim(rtrim($donor_id)))."');";
+
                             $result = mysql_query($donation_query);
 
-                            $find_no_donations_note = mysql_query("SELECT * FROM notes WHERE note_contact = '" . $donor_id . "' AND note_text = 'This donor has no donations!'");
-                            $find_no_donations_result = mysql_fetch_assoc($find_no_donations_note);
-
-                            if($find_no_donations_result) {
-                                mysql_query("DELETE FROM notes WHERE note_id = " . $find_no_donations_result['note_id']);
-                                echo "DELETE FROM notes WHERE note_id = " . $find_no_donations_result['note_id'];
-                            }
-
                             if (!$result) {
-                                $message  = 'Invalid query: ' . mysql_error() . "\n";
-                                $message .= 'Whole query: ' . $donation_query;
-                                die($message);
-                            }
+                                array_push($failed_imports, $data);
+                            } else {
+                                $find_no_donations_note = mysql_query("SELECT * FROM notes WHERE note_contact = '" . $donor_id . "' AND note_text = 'This donor has no donations!'");
+                                $find_no_donations_result = mysql_fetch_assoc($find_no_donations_note);
+
+                                if($find_no_donations_result) {
+                                    mysql_query("DELETE FROM notes WHERE note_id = " . $find_no_donations_result['note_id']);
+                                }
+                            }   
+                        } else {
+                            // we couldn't find a donor for the donation
+                            array_push($failed_imports, $data);
                         }
+                    } else {
+                        // we have a duplicate donation
+                        array_push($duplicate_donations_array, $data);
                     }
                 }
             }
             $row++;
         }
+    $_SESSION['duplicate_donations_array'] = $duplicate_donations_array;
+    $_SESSION['failed_imports'] = $failed_imports;
+    var_dump($_SESSION['failed_imports']);
     // exit;
     header('Location: contacts.php?import=success');
     }

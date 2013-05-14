@@ -71,12 +71,33 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
   
   <div class="container">
   <div class="leftcolumn">
-    <?php if($_GET['import'] == 'success')
-      echo "CSV import successful!<br><br>";
-    ?>
-    <h2>Donors</h2>
+    <?php 
+        if($_GET['import'] == 'success') {
+            echo "<span id=success_csv>CSV import successful!</span><br><br>";
 
-<?php if (!$totalRows_contactlist) { ?>
+            if($_SESSION['duplicate_donations_array'] && count($_SESSION['duplicate_donations_array']) > 0)
+                echo "<span id=duplicate_donations>There were " . count($_SESSION['duplicate_donations_array']) . " duplicate donations!</span><br><br>";
+
+            if($_SESSION['failed_imports']) {
+                echo "There were also imports that <span id=failed_text>failed</span> (either for no donor being found by that name or missing information in the spreadsheet.<br><br>";
+                echo "By receipt number:<br>";
+
+                $string = "";
+                foreach($_SESSION['failed_imports'] as $failed_import) {
+                    $string = $string . "<span class=failed_import>" . $failed_import[11] . "</span>, ";
+                }
+
+                echo substr($string, 0, -2);
+
+                unset($_SESSION['failed_imports']);
+            }
+            unset($_SESSION['duplicate_donations_array']);
+
+        }
+    ?>
+
+<?php if (!$totalRows_contactlist && !$_GET['import'] == 'success') { ?>
+<h2>Donors</h2>
 <br />
 No donors have been added yet.
 <br />
@@ -85,7 +106,8 @@ No donors have been added yet.
 <br />
 <?php } ?>
 
-<?php if ($totalRows_contactlist) { ?>
+<?php if ($totalRows_contactlist && !$_GET['import'] == 'success') { ?>
+<h2>Donors</h2>
     <form id="form1" name="form1" method="post" action="">
       <table width="100%" border="0" cellspacing="0" cellpadding="0">
         <tr>

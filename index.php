@@ -259,7 +259,7 @@
                 <br>
 
                 <?php if ($totalRows_contactlist > 0) { ?>
-                    <h2>Recently Viewed Donors</h2>
+                    <h2>Donors</h2>
                     <br />
                     <?php $i = 1; do { 
                         $comma = "";
