@@ -5,9 +5,9 @@
 <script src='includes/jquery-1.9.0.min.js'></script>
 <link href="includes/simplecustomer.css" rel="stylesheet" type="text/css" />
 <div class="headercontainer"> 
-  <img src="images/techbridge-imagestrans.gif" width="95" class="tbwicon"/>
+  <img src="images/TBWtype.png" width="200" class="tbwicon"/>
   <div class="header">
-    <h1>TBW Donation Management</h1>
+    <h1>Donation Management</h1>
 
   <a href="index.php" class="menubuttons <?php if ($pagetitle == 'Dashboard') { echo menubuttonsactive; } ?>">Dashboard</a>
 
