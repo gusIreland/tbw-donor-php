@@ -4,7 +4,7 @@
     
     //get contacts
     // record_set('contactlist',"SELECT * FROM contacts");
-    $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id";
+    $query = "SELECT * FROM donations RIGHT OUTER JOIN contacts ON contact_id = donor_id";
     record_set('donationlist', $query);
     
     //get custom fields
