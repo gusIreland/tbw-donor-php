@@ -24,6 +24,7 @@
   </div>
 
 <?php if ($totalRows_history) { ?>
+<?php if($user_admin){ ?>
 <div class="historycontainer">Recent: 
     <?php $ih = 1; do { 
         //GET CONTACT INFO FROM HISTORY
@@ -31,11 +32,13 @@
         //
     ?>
     <a href="contact-details.php?id=<?php echo $row_histcont['contact_id']; ?>">
-      <?php if($user_admin){ 
+      <?php
       echo $row_histcont['contact_first'] ." ";
       echo $row_histcont['contact_last'];
-      }  
+      
+
       ?></a>
       <?php if ($totalRows_history!=$ih) {?> &middot; <?php } ?>
       <?php $ih++; } while ($row_history = mysql_fetch_assoc($history)); ?></div>
+<?php } ?>
 <?php } ?>
