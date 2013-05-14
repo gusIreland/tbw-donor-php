@@ -4,7 +4,7 @@
 <script language="javascript" src="includes/calendar/calendar.js"></script>
 <link href="includes/simplecustomer.css" rel="stylesheet" type="text/css" />
 <div class="headercontainer"> 
-  <img src="images/TBWtype.png" width="200" class="tbwicon"/>
+  <img src="images/TBWtype.png" width="200" class="tbwicon" id="tbwtype"/>
   <div class="header">
     <h1>Donation Management</h1>
 
