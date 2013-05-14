@@ -31,15 +31,11 @@
         //
     ?>
     <a href="contact-details.php?id=<?php echo $row_histcont['contact_id']; ?>">
-      <?php $user_should_see_info = ($user_admin || ($row_contactlist['field_title'] == 'anonymous' && $row_contactlist['cfield_value'] == 'no')); ?>
-      <?php if($user_should_see_info){ 
+      <?php if($user_admin){ 
       echo $row_histcont['contact_first'] ." ";
       echo $row_histcont['contact_last'];
       }  
-      else
-      echo "Anonymous"
-      ?>
-    </a>
+      ?></a>
       <?php if ($totalRows_history!=$ih) {?> &middot; <?php } ?>
       <?php $ih++; } while ($row_history = mysql_fetch_assoc($history)); ?></div>
 <?php } ?>
