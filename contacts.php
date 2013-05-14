@@ -33,7 +33,7 @@ $sorder = "ORDER BY contact_phone DESC";
 $limit = "";
 $epp = 25;  //entries per page
 
-record_set('results',"SELECT contact_id FROM contacts");
+record_set('results',"SELECT DISTINCT contact_id FROM contacts LEFT OUTER JOIN fields_assoc ON contact_id = cfield_contact LEFT OUTER JOIN fields ON cfield_field = field_id");
 
 $entries_per_page = $epp;
 
@@ -49,7 +49,7 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
+record_set('contactlist',"SELECT * FROM contacts LEFT OUTER JOIN fields_assoc ON contact_id = cfield_contact LEFT OUTER JOIN fields ON cfield_field = field_id $sorder GROUP BY contact_id $limit");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -84,7 +84,10 @@ record_set('contactlist',"SELECT * FROM contacts $sorder $limit");
 
                 $string = "";
                 foreach($_SESSION['failed_imports'] as $failed_import) {
-                    $string = $string . "<span class=failed_import>" . $failed_import[11] . "</span>, ";
+                    if($failed_import[11] != '')
+                      $string = $string . "<span class=failed_import>" . $failed_import[11] . "</span>, ";
+                    else
+                      $string = $string . "<span class=failed_import>No Receipt Number Given</span>, ";
                 }
 
                 echo substr($string, 0, -2);
@@ -126,9 +129,34 @@ No donors have been added yet.
 
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
-          <td style="padding-left:5px"><a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>"><?php echo $row_contactlist['contact_first']; ?> <?php echo $row_contactlist['contact_last']; ?></a></td>
-          <td><a href="mailto:<?php echo $row_contactlist['contact_email']; ?>?subject=Thanks for donating to TechBridgeWorld!"><?php echo $row_contactlist['contact_email']; ?></a></td>
-          <td><a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+          <td style="padding-left:5px">
+            <a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>">
+              <?php 
+                $user_should_see_info = ($user_admin || ($row_contactlist['field_title'] == 'anonymous' && $row_contactlist['cfield_value'] == 'no'));
+                if($user_should_see_info)
+                  echo $row_contactlist['contact_first'] . " " . $row_contactlist['contact_last']; 
+                else
+                  echo "Anonymous"
+              ?>
+            </a></td>
+          <td>
+            <?php
+              if($user_should_see_info) {
+            ?>
+              <a href="mailto:<?php echo $row_contactlist['contact_email']; ?>?subject=Thanks for donating to TechBridgeWorld!"><?php echo $row_contactlist['contact_email']; ?></a>
+            <?php
+              }
+            ?>
+          </td>
+          <td>
+            <?php
+              if($user_admin) {
+            ?>
+            <a href="delete.php?contact=<?php echo $row_contactlist['contact_id']; ?>" onclick="javascript:return confirm('Are you sure?')">Delete</a>
+            <?php
+              }
+            ?>
+            </td>
         </tr>
         <?php $row_count++; } while ($row_contactlist = mysql_fetch_assoc($contactlist)); ?>
       </table>

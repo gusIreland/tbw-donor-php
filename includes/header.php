@@ -12,7 +12,14 @@
 
 <a href="contacts.php" class="menubuttons <?php if (($pagetitle== 'Donor' || $pagetitle == 'ContactDetails') && !($_GET['import'] == 'success')) { echo 'menubuttonsactive'; } ?>">Donors</a>
 <a href="donations.php" class="menubuttons <?php if ($pagetitle == 'Donation') { echo 'menubuttonsactive'; } ?>">Donations</a>
-<a href="users.php" class="menubuttons <?php if ($pagetitle == 'Users') { echo 'menubuttonsactive'; } ?>">Users</a><span class="headerright">Logged in as <?php echo $row_userinfo['user_email']; ?> | <a href="logout.php">Log Out</a> | <a href="profile.php">Update Profile</a> </span><br clear="all" />
+<?php
+  if ($user_admin) {
+?>
+  <a href="users.php" class="menubuttons <?php if ($pagetitle == 'Users') { echo 'menubuttonsactive'; } ?>">Users</a>
+  <?php
+  }
+?>
+  <span class="headerright">Logged in as <?php echo $row_userinfo['user_email']; ?> | <a href="logout.php">Log Out</a> | <a href="profile.php">Update Profile</a> </span><br clear="all" />
   </div>
   </div>
 
