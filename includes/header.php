@@ -39,6 +39,7 @@
       else
       echo "Anonymous"
       ?>
+    </a>
       <?php if ($totalRows_history!=$ih) {?> &middot; <?php } ?>
       <?php $ih++; } while ($row_history = mysql_fetch_assoc($history)); ?></div>
 <?php } ?>
