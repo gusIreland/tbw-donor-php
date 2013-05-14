@@ -185,11 +185,11 @@
                                 <td colspan="4"><?php display_msg(); ?></td>
                             </tr>
                             <tr>
-                                <th width="25%"  style="padding-left:5px"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $name; ?>">Donor Name</a></th>
-                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $campaign; ?>">Campaign </a></th>
-                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $amount; ?>">Donation Amount</a></th>
-                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $date; ?>">Date of Donation</a></th>
-                                <th width="25%"><a href="?page=<?php echo $page_number; ?>&amp;<?php echo $matching_company; ?>">Matching Company</a></th>
+                                <th width="25%"  style="padding-left:5px">Donor Name</th>
+                                <th width="25%">Campaign</th>
+                                <th width="25%">Donation Amount</a></th>
+                                <th width="25%">Date of Donation</a></th>
+                                <th width="25%">Matching Company</a></th>
                         
                                 <th width="7%">&nbsp;</th>
                             </tr>

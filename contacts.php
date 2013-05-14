@@ -5,12 +5,13 @@ $pagetitle = 'Donor';
 //SORTING
 $sorder = '';
 $name = "name_up";
-if (isset($_GET['name_up'])) {
-$sorder = "ORDER BY contact_last ASC, contact_first ASC";
-$name = "name_down";
-} elseif (isset($_GET['name_down'])) {
-$sorder = "ORDER BY contact_last DESC, contact_first DESC";
-}
+$name = "name_up";
+    if (isset($_GET['name_up'])) {
+        $sorder = "ORDER BY contact_last ASC, contact_first ASC";
+        $name = "name_down";
+    } elseif (isset($_GET['name_down'])) {
+        $sorder = "ORDER BY contact_last DESC, contact_first DESC";
+    }
 
 $email = "email_up";
 if (isset($_GET['email_up'])) {
@@ -49,7 +50,7 @@ $limit = "LIMIT $offset, $entries_per_page";
 //
 
 //get contacts
-record_set('contactlist',"SELECT * FROM contacts LEFT OUTER JOIN fields_assoc ON contact_id = cfield_contact LEFT OUTER JOIN fields ON cfield_field = field_id $sorder GROUP BY contact_id $limit");
+record_set('contactlist',"SELECT * FROM contacts LEFT OUTER JOIN fields_assoc ON contact_id = cfield_contact LEFT OUTER JOIN fields ON cfield_field = field_id GROUP BY contact_id $sorder $limit");
 
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -130,18 +131,20 @@ No donors have been added yet.
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
           <td style="padding-left:5px">
-            <?php if($user_admin){?>
-            <a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>">
-            <?php }else{} ?>
-            <a>
               <?php 
                 $user_should_see_info = ($user_admin || ($row_contactlist['field_title'] == 'anonymous' && $row_contactlist['cfield_value'] == 'no'));
-                if($user_should_see_info)
-                  echo $row_contactlist['contact_first'] . " " . $row_contactlist['contact_last']; 
+                
+                if($user_should_see_info) {
+                  ?>
+                  <a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>">
+                    <?php echo $row_contactlist['contact_first'] . " " . $row_contactlist['contact_last']; ?>
+                  </a>
+                  <?php
+                }
                 else
                   echo "Anonymous"
               ?>
-            </a></td>
+            </td>
           <td>
             <?php
               if($user_should_see_info) {

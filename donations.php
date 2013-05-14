@@ -7,10 +7,10 @@
     $sorder = '';
     $name = "name_up";
     if (isset($_GET['name_up'])) {
-        $sorder = "ORDER BY contact_first ASC";
+        $sorder = "ORDER BY contact_last ASC, contact_first ASC";
         $name = "name_down";
     } elseif (isset($_GET['name_down'])) {
-        $sorder = "ORDER BY contact_first DESC";
+        $sorder = "ORDER BY contact_last DESC, contact_first DESC";
     }
     
     $campaign = "campaign_up";
