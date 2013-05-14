@@ -86,7 +86,6 @@
 
     if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
         record_set('results_donations', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC");
-        
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
@@ -132,28 +131,28 @@
     record_set('contactlist',"SELECT * FROM history RIGHT OUTER JOIN contacts ON contact_id = history_contact $cwhere ORDER BY history_date DESC LIMIT 0, $climit");
 
     $comparison = '';
-    if(isset($_GET['s']) && preg_match("/^\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$_GET['s']."' ORDER BY legal_amount DESC $limit_donations");
+    if(isset($_GET['s']) && preg_match("/^=\d+$/", $_GET['s'])) {
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '" . substr($_GET['s'], 1) . "' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC $limit_donations");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '" . substr($_GET['s'], 1)."' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($_GET['s'], 1)."' ORDER BY legal_amount DESC $limit_donations");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '" . substr($_GET['s'], 1) . "' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^<=\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC $limit_donations");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '" . substr($_GET['s'], 2) . "' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 
     elseif(isset($_GET['s']) && preg_match("/^>=\d+$/", $_GET['s'])) {
-        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($_GET['s'], 2)."' ORDER BY legal_amount DESC $limit_donations");
+        record_set('donationslist', "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '" . substr($_GET['s'], 2) . "' ORDER BY legal_amount DESC $limit_donations");
         $comparison = $_GET['s'];
     }
 ?>
@@ -203,7 +202,8 @@
                                     <td><?php if ($user_admin) echo "$". $row_donationslist['legal_amount']; ?></td>
                                     <td><?php echo $row_donationslist['date_added']; ?></td>
                                     <td><?php echo $row_donationslist['match_company_name']; ?></td>
-                                    <td><a href="delete.php?donation=<?php echo $row_donationslist['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
+                                    <td><a href="donation.php?id=<?php echo $row_donationslist['id']; ?>&redirect=donations.php">Edit</a><br>
+                                        <a href="delete.php?donation=<?php echo $row_donationslist['id']; ?>&redirect=donations.php" onclick="javascript:return confirm('Are you sure?')">Delete</a></td>
                                 </tr>
                             <?php $row_count++; } while ($row_donationslist = mysql_fetch_assoc($donationslist)); ?>
                         </table>

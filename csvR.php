@@ -15,24 +15,24 @@
 
     elseif(isset($_POST['comparison_string'])) {
         $comparison = $_POST['comparison_string'];
-        if(isset($comparison) && preg_match("/^\d+$/", $comparison)) {
-            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '".$comparison."' ORDER BY legal_amount DESC";
-        }
-    
-        elseif(isset($comparison) && preg_match("/^<\d+$/", $comparison)) {
-            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '".substr($comparison, 1)."' ORDER BY legal_amount DESC";
-        }
-    
-        elseif(isset($comparison) && preg_match("/^>\d+$/", $comparison)) {
-            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '".substr($comparison, 1)."' ORDER BY legal_amount DESC";
+        if(isset($comparison) && preg_match("/^=\d+$/", $comparison)) {
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount = '" . substr($comparison, 1) . "' ORDER BY legal_amount DESC";
+        }  
+      
+        elseif(isset($comparison) && preg_match("/^<\d+$/", $comparison)) {  
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount < '" . substr($comparison, 1) . "' ORDER BY legal_amount DESC";
+        }  
+      
+        elseif(isset($comparison) && preg_match("/^>\d+$/", $comparison)) {  
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount > '" . substr($comparison, 1) . "' ORDER BY legal_amount DESC";
         }
     
         elseif(isset($comparison) && preg_match("/^<=\d+$/", $comparison)) {
-            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($comparison, 2)."' ORDER BY legal_amount DESC";
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount <= '".substr($comparison, 2) . "' ORDER BY legal_amount DESC";
         }
     
         elseif(isset($comparison) && preg_match("/^>=\d+$/", $comparison)) {
-            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($comparison, 2)."' ORDER BY legal_amount DESC";
+            $query = "SELECT * FROM donations INNER JOIN contacts ON contact_id = donor_id WHERE legal_amount >= '".substr($comparison, 2) . "' ORDER BY legal_amount DESC";
         }
     } 
 
