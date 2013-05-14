@@ -130,7 +130,10 @@ No donors have been added yet.
   <?php $row_count = 1; do {  ?>
         <tr <?php if ($row_count%2) { ?>bgcolor="#F4F4F4"<?php } ?>>
           <td style="padding-left:5px">
+            <?php if($user_admin){?>
             <a href="contact-details.php?id=<?php echo $row_contactlist['contact_id']; ?>">
+            <?php }else{} ?>
+            <a>
               <?php 
                 $user_should_see_info = ($user_admin || ($row_contactlist['field_title'] == 'anonymous' && $row_contactlist['cfield_value'] == 'no'));
                 if($user_should_see_info)
